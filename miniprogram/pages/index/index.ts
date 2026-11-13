@@ -7,6 +7,7 @@ interface Tool {
   iconColor: string
   borderColor: string
   comingSoon: boolean
+  path: string
 }
 
 Component({
@@ -20,7 +21,8 @@ Component({
         iconBg: '#EEF2FF',
         iconColor: '#4C6EF5',
         borderColor: '#DBE4FF',
-        comingSoon: true,
+        comingSoon: false,
+        path: '/pages/counter/counter',
       },
       {
         id: 'random',
@@ -30,7 +32,8 @@ Component({
         iconBg: '#FFF0E6',
         iconColor: '#F76707',
         borderColor: '#FFE8CC',
-        comingSoon: true,
+        comingSoon: false,
+        path: '/pages/random/random',
       },
     ] as Tool[],
   },
@@ -55,6 +58,8 @@ Component({
         })
         return
       }
+
+      wx.navigateTo({ url: tool.path })
     },
   },
 })

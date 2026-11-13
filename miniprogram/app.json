@@ -1,6 +1,8 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/counter/counter",
+    "pages/random/random",
     "pages/mine/mine",
     "pages/logs/logs"
   ],
