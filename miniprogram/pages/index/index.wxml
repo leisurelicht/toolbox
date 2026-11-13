@@ -1,28 +1,47 @@
-<!--index.wxml-->
-<navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    <view class="userinfo">
-      <block wx:if="{{canIUseNicknameComp && !hasUserInfo}}">
-        <button class="avatar-wrapper" open-type="chooseAvatar" bind:chooseavatar="onChooseAvatar">
-          <image class="avatar" src="{{userInfo.avatarUrl}}"></image>
-        </button>
-        <view class="nickname-wrapper">
-          <text class="nickname-label">昵称</text>
-          <input type="nickname" class="nickname-input" placeholder="请输入昵称" bind:change="onInputChange" />
-        </view>
-      </block>
-      <block wx:elif="{{!hasUserInfo}}">
-        <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-        <view wx:else> 请使用2.10.4及以上版本基础库 </view>
-      </block>
-      <block wx:else>
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-      </block>
+<!-- 工具箱首页 -->
+<navigation-bar title="工具箱" back="{{false}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+
+<scroll-view class="page" scroll-y enhanced show-scrollbar="{{false}}">
+  <!-- Hero -->
+  <view class="hero">
+    <view class="hero-badge">
+      <view class="badge-dot"></view>
+      <text>轻量工具箱</text>
     </view>
-    <view class="usermotto">
-      <text class="user-motto">{{motto}}</text>
+    <view class="hero-title">随手实用</view>
+    <view class="hero-sub">精选 {{tools.length}} 个工具，保持简单高效</view>
+  </view>
+
+  <!-- 工具列表 -->
+  <view class="tool-list">
+    <view
+      wx:for="{{tools}}"
+      wx:key="id"
+      class="tool-card {{item.comingSoon ? 'is-pending' : ''}}"
+      data-tool="{{item}}"
+      bind:tap="onToolTap"
+    >
+      <!-- 图标 -->
+      <view class="card-icon" style="background: {{item.iconBg}};">
+        <text class="card-icon-text" style="color: {{item.iconColor}};">{{item.symbol}}</text>
+      </view>
+      <!-- 内容 -->
+      <view class="card-main">
+        <view class="card-head">
+          <text class="card-name">{{item.name}}</text>
+          <view wx:if="{{item.comingSoon}}" class="card-tag">
+            <text>即将推出</text>
+          </view>
+        </view>
+        <text class="card-desc">{{item.description}}</text>
+      </view>
+      <!-- 箭头 -->
+      <view class="card-arrow">
+        <text>›</text>
+      </view>
     </view>
   </view>
+
+  <!-- 底部留白 -->
+  <view class="bottom-spacer"></view>
 </scroll-view>
