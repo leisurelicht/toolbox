@@ -1,10 +1,15 @@
-/**app.wxss**/
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 200rpx 0;
+/* 全局样式 */
+
+page {
+  --color-primary: #4C6EF5;
+  --color-bg: #FBFBFD;
+  --color-text: #1E1E2E;
+  --color-muted: #9CA3AF;
+  --color-border: rgba(0, 0, 0, 0.04);
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC', sans-serif;
+  font-size: 28rpx;
+  color: var(--color-text);
+  background: var(--color-bg);
   box-sizing: border-box;
-} 
+}
