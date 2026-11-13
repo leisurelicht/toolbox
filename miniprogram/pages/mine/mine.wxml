@@ -1,0 +1,41 @@
+<!-- 我的页面 -->
+<navigation-bar title="我的" back="{{false}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+
+<scroll-view class="page" scroll-y enhanced show-scrollbar="{{false}}">
+  <!-- 头像 -->
+  <view class="profile">
+    <view class="profile-avatar">
+      <text class="avatar-text">我</text>
+    </view>
+    <text class="profile-name">工具箱用户</text>
+    <text class="profile-sub">简单 · 高效 · 实用</text>
+  </view>
+
+  <!-- 菜单 -->
+  <view class="section">
+    <view class="section-label">通用</view>
+    <view class="menu-card">
+      <view class="menu-item" bind:tap="onTapAbout">
+        <view class="menu-icon" style="background: #EEF2FF;">
+          <text style="color: #4C6EF5;">?</text>
+        </view>
+        <text class="menu-text">关于工具箱</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-divider"></view>
+      <view class="menu-item" bind:tap="onTapFeedback">
+        <view class="menu-icon" style="background: #FFF0E6;">
+          <text style="color: #F76707;">✧</text>
+        </view>
+        <text class="menu-text">意见反馈</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="version">
+    <text>工具箱 v1.0.0</text>
+  </view>
+
+  <view class="bottom-spacer"></view>
+</scroll-view>
