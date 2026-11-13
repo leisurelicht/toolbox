@@ -1,0 +1,213 @@
+/* ========================================
+   计数器
+   设计：大点击区 + 步长选择 + 操作记录
+   ======================================== */
+
+.page {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #FBFBFD;
+  overflow: hidden;
+}
+
+/* ===========================
+   大点击区
+   =========================== */
+.tap-zone {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.tap-zone:active {
+  /* tap 反馈由 pulse class 处理 */
+}
+
+.count-row {
+  display: flex;
+  align-items: baseline;
+}
+
+.count-value {
+  font-size: 200rpx;
+  font-weight: 800;
+  color: #1E1E2E;
+  line-height: 1;
+  letter-spacing: -6rpx;
+}
+
+.tap-zone.pulse .count-value {
+  color: #4C6EF5;
+}
+
+.count-unit {
+  font-size: 36rpx;
+  color: #B0B5C0;
+  font-weight: 500;
+  margin-left: 16rpx;
+}
+
+.tap-hint {
+  margin-top: 20rpx;
+}
+
+.tap-hint text {
+  font-size: 24rpx;
+  color: #D1D5DB;
+}
+
+/* ===========================
+   工具栏
+   =========================== */
+.toolbar {
+  padding: 0 32rpx 28rpx;
+  flex-shrink: 0;
+}
+
+/* 步长选择 */
+.step-selector {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.step-chip {
+  flex: 1;
+  height: 64rpx;
+  border-radius: 16rpx;
+  background: #FFFFFF;
+  border: 1rpx solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.step-chip text {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #9CA3AF;
+}
+
+.step-chip:active {
+  opacity: 0.7;
+}
+
+.step-chip.active {
+  background: #EEF2FF;
+  border-color: #C7D2FE;
+}
+
+.step-chip.active text {
+  color: #4C6EF5;
+}
+
+/* 操作按钮行 */
+.toolbar-actions {
+  display: flex;
+  gap: 12rpx;
+}
+
+.tool-btn {
+  flex: 1;
+  height: 80rpx;
+  border-radius: 20rpx;
+  background: #FFFFFF;
+  border: 1rpx solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tool-btn:active {
+  background: #F8F9FC;
+}
+
+.tool-btn text {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #4B5563;
+}
+
+.tool-btn.danger text {
+  color: #F76707;
+}
+
+/* ===========================
+   历史记录
+   =========================== */
+.history {
+  padding: 0 32rpx 28rpx;
+  height: 25vh;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4rpx 12rpx;
+  flex-shrink: 0;
+}
+
+.history-title {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #B0B5C0;
+}
+
+.history-clear {
+  font-size: 22rpx;
+  color: #D1D5DB;
+}
+
+.history-clear:active {
+  color: #F76707;
+}
+
+.history-scroll {
+  flex: 1;
+  height: 0;
+}
+
+.history-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12rpx;
+  padding-bottom: 120rpx;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  padding: 10rpx 20rpx;
+  border-radius: 14rpx;
+  background: #FFFFFF;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+}
+
+.history-dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  margin-right: 10rpx;
+  flex-shrink: 0;
+}
+
+.history-delta {
+  font-size: 22rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+  margin-right: 10rpx;
+}
+
+.history-time {
+  font-size: 20rpx;
+  color: #C5C9D2;
+}

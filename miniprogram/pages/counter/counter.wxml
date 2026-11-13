@@ -1,0 +1,61 @@
+<!-- 计数器 -->
+<navigation-bar title="计数器" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+
+<view class="page">
+  <!-- 大点击区 -->
+  <view class="tap-zone {{pulse ? 'pulse' : ''}}" bind:tap="onTapZone">
+    <view class="count-row">
+      <text class="count-value">{{count}}</text>
+      <text class="count-unit">次</text>
+    </view>
+    <view class="tap-hint">
+      <text>轻触上方区域计数</text>
+    </view>
+  </view>
+
+  <!-- 工具栏 -->
+  <view class="toolbar">
+    <!-- 步长选择 -->
+    <view class="step-selector">
+      <view
+        wx:for="{{steps}}"
+        wx:key="*this"
+        class="step-chip {{step === item ? 'active' : ''}}"
+        data-step="{{item}}"
+        bind:tap="onStepChange"
+      >
+        <text>+{{item}}</text>
+      </view>
+    </view>
+
+    <!-- 操作按钮 -->
+    <view class="toolbar-actions">
+      <view class="tool-btn" bind:tap="onDecrement">
+        <text>−{{step}}</text>
+      </view>
+      <view class="tool-btn" bind:tap="onUndo">
+        <text>↩ 撤销</text>
+      </view>
+      <view class="tool-btn danger" bind:tap="onReset">
+        <text>归零</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="history" wx:if="{{history.length > 0}}">
+    <view class="history-header">
+      <text class="history-title">记录</text>
+      <text class="history-clear" bind:tap="onClearHistory">清空</text>
+    </view>
+    <scroll-view class="history-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+      <view class="history-list">
+        <view wx:for="{{history}}" wx:key="time" class="history-item">
+          <view class="history-dot" style="background: {{item.delta > 0 ? '#4C6EF5' : '#F76707'}};"></view>
+          <text class="history-delta">{{item.delta > 0 ? '+' : ''}}{{item.delta}}</text>
+          <text class="history-time">{{item.label}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
