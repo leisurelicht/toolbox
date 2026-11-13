@@ -1,0 +1,74 @@
+<!-- 随机数 -->
+<navigation-bar title="随机数" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+
+<scroll-view class="page" scroll-y enhanced show-scrollbar="{{false}}">
+  <!-- 结果区 -->
+  <view class="result-area">
+    <view class="result-box {{rolling ? 'rolling' : ''}}">
+      <text class="result-value">{{result}}</text>
+    </view>
+    <text wx:if="{{result}}" class="result-range">范围 {{min}} ~ {{max}}</text>
+  </view>
+
+  <!-- 范围设置 -->
+  <view class="range-section">
+    <view class="range-row">
+      <text class="range-label">最小值</text>
+      <view class="range-input-wrap">
+        <view class="range-stepper" bind:tap="onMinDec">
+          <text>−</text>
+        </view>
+        <input
+          class="range-input"
+          type="number"
+          value="{{min}}"
+          bind:input="onMinInput"
+          bind:blur="onMinBlur"
+        />
+        <view class="range-stepper" bind:tap="onMinInc">
+          <text>+</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="range-divider"></view>
+
+    <view class="range-row">
+      <text class="range-label">最大值</text>
+      <view class="range-input-wrap">
+        <view class="range-stepper" bind:tap="onMaxDec">
+          <text>−</text>
+        </view>
+        <input
+          class="range-input"
+          type="number"
+          value="{{max}}"
+          bind:input="onMaxInput"
+          bind:blur="onMaxBlur"
+        />
+        <view class="range-stepper" bind:tap="onMaxInc">
+          <text>+</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷范围 -->
+  <view class="presets">
+    <view
+      wx:for="{{presets}}"
+      wx:key="label"
+      class="preset-chip {{min === item.min && max === item.max ? 'active' : ''}}"
+      data-min="{{item.min}}"
+      data-max="{{item.max}}"
+      bind:tap="onPreset"
+    >
+      <text>{{item.label}}</text>
+    </view>
+  </view>
+
+  <!-- 生成按钮 -->
+  <view class="generate-btn" bind:tap="onGenerate">
+    <text>生成随机数</text>
+  </view>
+</scroll-view>
