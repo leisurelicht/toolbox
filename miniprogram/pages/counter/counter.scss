@@ -140,11 +140,13 @@
    历史记录
    =========================== */
 .history {
-  padding: 0 32rpx 28rpx;
+  padding: 20rpx 32rpx 28rpx;
   height: 25vh;
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  background: #F3F4F6;
+  border-radius: 28rpx 28rpx 0 0;
 }
 
 .history-header {
