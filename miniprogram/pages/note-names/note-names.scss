@@ -1,0 +1,230 @@
+/* 页面容器 */
+.page-container {
+  height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  background: #FBFBFD;
+  overflow-x: hidden;
+}
+
+.scroll-inner {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24rpx 0 40rpx;
+  overflow: hidden;
+}
+
+/* 分段 */
+.section {
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 0 24rpx;
+  padding: 0 32rpx;
+}
+
+.section:first-child {
+  margin-top: 0;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+  margin-bottom: 16rpx;
+  padding-left: 4rpx;
+}
+
+/* ===== 自然音对照表 ===== */
+.table-header {
+  display: flex;
+  box-sizing: border-box;
+  background: #EDF0F5;
+  border-radius: 12rpx 12rpx 0 0;
+  padding: 16rpx 0;
+  overflow: hidden;
+}
+
+.th {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.th-note {
+  flex: 0 0 72rpx;
+}
+
+.table-row {
+  display: flex;
+  box-sizing: border-box;
+  background: #FFF;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #F0F0F0;
+  overflow: hidden;
+}
+
+.table-row:last-child {
+  border-radius: 0 0 12rpx 12rpx;
+  border-bottom: none;
+}
+
+.td {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  overflow: hidden;
+}
+
+.td-note {
+  flex: 0 0 72rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.note-letter {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: #1E1E2E;
+  color: #FFF;
+  font-size: 26rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.td-text {
+  font-size: 22rpx;
+  color: #444;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.td-text.highlight {
+  font-size: 20rpx;
+  color: #E85D3A;
+  font-weight: 700;
+  background: #FFF5F2;
+  padding: 4rpx 8rpx;
+  border-radius: 8rpx;
+}
+
+/* ===== 变音记号卡片 ===== */
+.acc-card {
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFF;
+  border-radius: 16rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 12rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+}
+
+.acc-symbol-row {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 18rpx;
+}
+
+.acc-symbol {
+  font-size: 44rpx;
+  margin-right: 12rpx;
+  line-height: 1;
+}
+
+.acc-zh {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1A1A1A;
+}
+
+.acc-detail-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.acc-detail-item {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 50%;
+  box-sizing: border-box;
+  padding-right: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.acc-detail-label {
+  font-size: 20rpx;
+  color: #BBB;
+  text-transform: uppercase;
+  margin-bottom: 4rpx;
+}
+
+.acc-detail-val {
+  font-size: 24rpx;
+  color: #444;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ===== 提示卡片 ===== */
+.tip-card {
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFF;
+  border-radius: 16rpx;
+  padding: 24rpx 28rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+}
+
+.tip-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 14rpx;
+}
+
+.tip-item:last-child {
+  margin-bottom: 0;
+}
+
+.tip-bullet {
+  font-size: 20rpx;
+  color: #4A6FBF;
+  margin-right: 12rpx;
+  margin-top: 4rpx;
+  flex-shrink: 0;
+}
+
+.tip-text {
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+.tip-strong {
+  font-weight: 700;
+  color: #333;
+  background: #FFF8E1;
+  padding: 2rpx 8rpx;
+  border-radius: 4rpx;
+}
+
+/* 底部安全区 */
+.bottom-safe {
+  height: 60rpx;
+}

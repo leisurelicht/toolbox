@@ -1,0 +1,232 @@
+/* ========================================
+   频率-音高对照表
+   布局：顶部固定 + 下部独立滚动
+   ======================================== */
+
+page {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 页面容器：铺满视口，自身不滚动 */
+.page-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: #FBFBFD;
+  overflow: hidden;
+}
+
+/* 固定顶栏 */
+.top-bar {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 音高标准切换：4 等分 */
+.standard-bar {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20rpx 24rpx 8rpx;
+}
+
+.standard-chip {
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 6rpx;
+  padding: 14rpx 8rpx;
+  border-radius: 16rpx;
+  background: #FFF;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.04);
+}
+
+.standard-chip.active {
+  background: #1E1E2E;
+}
+
+.standard-chip-freq {
+  font-size: 22rpx;
+  line-height: 32rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.standard-chip.active .standard-chip-freq {
+  color: #FFF;
+}
+
+.standard-chip-desc {
+  font-size: 18rpx;
+  line-height: 26rpx;
+  color: #AAA;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.standard-chip.active .standard-chip-desc {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* 滚动区域：高度由 JS 计算后注入 */
+.scroll-body {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.scroll-inner {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8rpx 32rpx 0;
+  overflow: hidden;
+}
+
+/* ===== 八度分组 ===== */
+.octave-group {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 20rpx;
+}
+
+.octave-header {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  background: #FFF;
+  border-radius: 16rpx;
+  padding: 24rpx 28rpx;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
+  overflow: hidden;
+}
+
+.octave-label {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+  flex-shrink: 0;
+}
+
+.octave-range {
+  flex: 1;
+  min-width: 0;
+  font-size: 24rpx;
+  color: #D1D5DB;
+  margin-left: 16rpx;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.octave-arrow {
+  flex-shrink: 0;
+  margin-left: 12rpx;
+  font-size: 28rpx;
+  color: #CCC;
+}
+
+.octave-arrow.open {
+  transform: rotate(180deg);
+}
+
+/* ===== 音高列表 ===== */
+.octave-body {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 4rpx;
+  background: #FFF;
+  border-radius: 0 0 16rpx 16rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.03);
+}
+
+.freq-row {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 16rpx 24rpx;
+  overflow: hidden;
+  border-top: 1rpx solid #F5F5F5;
+}
+
+.freq-header-row {
+  background: #F8F9FB;
+  border-top: none;
+  border-bottom: 1rpx solid #EEE;
+}
+
+.freq-col {
+  font-size: 24rpx;
+  color: #444;
+}
+
+.freq-col-note {
+  flex: 0 0 132rpx;
+  font-weight: 600;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  color: #333;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.freq-header-row .freq-col-note {
+  font-weight: 500;
+  color: #999;
+  font-size: 22rpx;
+  font-family: inherit;
+}
+
+.freq-col-midi {
+  flex: 0 0 70rpx;
+  text-align: center;
+  color: #999;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.freq-header-row .freq-col-midi {
+  color: #999;
+  font-size: 22rpx;
+}
+
+.freq-col-hz {
+  flex: 1;
+  min-width: 0;
+  text-align: right;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: #555;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.freq-header-row .freq-col-hz {
+  font-weight: 500;
+  color: #999;
+  font-size: 22rpx;
+}
+
+/* 底部安全区 */
+.bottom-safe {
+  height: 60rpx;
+}

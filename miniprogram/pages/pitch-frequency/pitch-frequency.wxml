@@ -1,0 +1,67 @@
+<!-- 频率-音高对照表 -->
+<view class="page-container">
+  <navigation-bar title="频率对照" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+
+  <!-- 固定顶栏：音高标准切换 -->
+  <view class="top-bar">
+    <view class="standard-bar">
+      <view
+        wx:for="{{pitchStandards}}"
+        wx:key="value"
+        class="standard-chip {{activeStandard === item.value ? 'active' : ''}}"
+        data-value="{{item.value}}"
+        bind:tap="onStandardChange"
+      >
+        <text class="standard-chip-freq">{{item.label}}</text>
+        <text class="standard-chip-desc">{{item.desc}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 仅此区域滚动 -->
+  <scroll-view
+    class="scroll-body"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    style="height: {{scrollHeight}}px;"
+  >
+    <view class="scroll-inner">
+      <view wx:for="{{octaveGroups}}" wx:key="octave" class="octave-group">
+        <!-- 八度标题 -->
+        <view
+          class="octave-header"
+          data-octave="{{item.octave}}"
+          bind:tap="onToggleOctave"
+        >
+          <text class="octave-label">{{item.label}}</text>
+          <text class="octave-range">C{{item.octave}} – B{{item.octave}}</text>
+          <text class="octave-arrow {{item.expanded ? 'open' : ''}}">▾</text>
+        </view>
+
+        <!-- 音高列表 -->
+        <view wx:if="{{item.expanded}}" class="octave-body">
+          <!-- 表头 -->
+          <view class="freq-row freq-header-row">
+            <text class="freq-col freq-col-note">音名</text>
+            <text class="freq-col freq-col-midi">MIDI</text>
+            <text class="freq-col freq-col-hz">频率 (Hz)</text>
+          </view>
+          <!-- 数据行 -->
+          <view
+            wx:for="{{item.notes}}"
+            wx:for-item="note"
+            wx:key="midi"
+            class="freq-row"
+          >
+            <text class="freq-col freq-col-note">{{note.name}}</text>
+            <text class="freq-col freq-col-midi">{{note.midi}}</text>
+            <text class="freq-col freq-col-hz">{{activeStandard === '415' ? note.hz415 : activeStandard === '430' ? note.hz430 : activeStandard === '432' ? note.hz432 : note.hz440}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

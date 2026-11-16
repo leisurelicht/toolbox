@@ -1,0 +1,82 @@
+<!-- 音名多语种对照表 -->
+<navigation-bar title="音名对照" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+
+<scroll-view class="page-container" scroll-y enhanced show-scrollbar="{{false}}">
+  <view class="scroll-inner">
+  <!-- 自然音对照 -->
+  <view class="section">
+    <view class="section-title">自然音级</view>
+
+    <!-- 表头 -->
+    <view class="table-header">
+      <view class="th th-note">音名</view>
+      <view wx:for="{{columns}}" wx:key="key" class="th">{{item.label}}</view>
+    </view>
+
+    <!-- 表体 -->
+    <view wx:for="{{naturalNotes}}" wx:key="english" class="table-row">
+      <view class="td td-note">
+        <text class="note-letter">{{item.english}}</text>
+      </view>
+      <view wx:for="{{columns}}" wx:for-item="col" wx:key="key" class="td">
+        <text class="td-text {{col.key === 'german' && item.english === 'B' ? 'highlight' : ''}}">{{item[col.key]}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 变音记号 -->
+  <view class="section">
+    <view class="section-title">变音记号命名</view>
+
+    <view wx:for="{{accidentals}}" wx:key="symbol" class="acc-card">
+      <view class="acc-symbol-row">
+        <text class="acc-symbol">{{item.symbol}}</text>
+        <text class="acc-zh">{{item.zh}}</text>
+      </view>
+      <view class="acc-detail-grid">
+        <view class="acc-detail-item">
+          <text class="acc-detail-label">English</text>
+          <text class="acc-detail-val">{{item.en}}</text>
+        </view>
+        <view class="acc-detail-item">
+          <text class="acc-detail-label">Deutsch</text>
+          <text class="acc-detail-val">{{item.deSuffix || '(还原)'}}</text>
+        </view>
+        <view class="acc-detail-item">
+          <text class="acc-detail-label">Français</text>
+          <text class="acc-detail-val">{{item.frWord}}</text>
+        </view>
+        <view class="acc-detail-item">
+          <text class="acc-detail-label">Italiano</text>
+          <text class="acc-detail-val">{{item.itWord}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 德语特殊规则提示 -->
+  <view class="section">
+    <view class="section-title">德语特殊规则</view>
+    <view class="tip-card">
+      <view class="tip-item">
+        <text class="tip-bullet">●</text>
+        <text class="tip-text"><text class="tip-strong">B = ♭B</text>（降B），而 <text class="tip-strong">H = ♮B</text>（还原B）</text>
+      </view>
+      <view class="tip-item">
+        <text class="tip-bullet">●</text>
+        <text class="tip-text">升号后缀 <text class="tip-strong">-is</text>：C → Cis, D → Dis, F → Fis, G → Gis, A → Ais</text>
+      </view>
+      <view class="tip-item">
+        <text class="tip-bullet">●</text>
+        <text class="tip-text">降号后缀 <text class="tip-strong">-es</text>：D → Des, G → Ges；但 E → Es, A → As, H → B</text>
+      </view>
+      <view class="tip-item">
+        <text class="tip-bullet">●</text>
+        <text class="tip-text">重升降：Cisis / Ceses，Fisis / Feses 等</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="bottom-safe"></view>
+  </view>
+</scroll-view>

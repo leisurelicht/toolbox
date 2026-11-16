@@ -9,13 +9,34 @@
       <text>轻量工具箱</text>
     </view>
     <view class="hero-title">随手实用</view>
-    <view class="hero-sub">精选 {{tools.length}} 个工具，保持简单高效</view>
+    <view class="hero-sub">精选 {{totalCount}} 个工具，保持简单高效</view>
   </view>
 
-  <!-- 工具列表 -->
+  <!-- Tab 切换栏 -->
+  <view class="tab-bar">
+    <view
+      wx:for="{{categories}}"
+      wx:key="id"
+      class="tab-item {{activeCategory === item.id ? 'active' : ''}}"
+      data-id="{{item.id}}"
+      bind:tap="onTabChange"
+    >
+      <text class="tab-icon">{{item.icon}}</text>
+      <text class="tab-name">{{item.name}}</text>
+    </view>
+    <!-- 滑动指示条 -->
+    <view
+      class="tab-indicator"
+      style="width: {{100 / categories.length}}%; transform: translateX({{activeIndex * 100}}%);"
+    >
+      <view class="tab-indicator-inner"></view>
+    </view>
+  </view>
+
+  <!-- 当前分类的工具列表 -->
   <view class="tool-list">
     <view
-      wx:for="{{tools}}"
+      wx:for="{{activeTools}}"
       wx:key="id"
       class="tool-card {{item.comingSoon ? 'is-pending' : ''}}"
       data-tool="{{item}}"

@@ -10,8 +10,18 @@ interface Tool {
   path: string
 }
 
-Component({
-  data: {
+interface Category {
+  id: string
+  name: string
+  icon: string
+  tools: Tool[]
+}
+
+const ALL_CATEGORIES: Category[] = [
+  {
+    id: 'daily',
+    name: '日常',
+    icon: '🛠',
     tools: [
       {
         id: 'counter',
@@ -35,7 +45,61 @@ Component({
         comingSoon: false,
         path: '/pages/random/random',
       },
-    ] as Tool[],
+    ],
+  },
+  {
+    id: 'music',
+    name: '音乐',
+    icon: '🎵',
+    tools: [
+      {
+        id: 'key-signature',
+        name: '调号速查',
+        symbol: '♯',
+        description: '15个大小调号一览，含中德对照',
+        iconBg: '#FFF0E6',
+        iconColor: '#E87A2A',
+        borderColor: '#FFE8CC',
+        comingSoon: false,
+        path: '/pages/key-signature/key-signature',
+      },
+      {
+        id: 'note-names',
+        name: '音名对照',
+        symbol: 'CD',
+        description: '英德法意中五语种音名互查',
+        iconBg: '#EEF2FF',
+        iconColor: '#4C6EF5',
+        borderColor: '#DBE4FF',
+        comingSoon: false,
+        path: '/pages/note-names/note-names',
+      },
+      {
+        id: 'pitch-frequency',
+        name: '频率对照',
+        symbol: 'Hz',
+        description: 'C0–B8 全音域频率，多律制切换',
+        iconBg: '#E8F5E9',
+        iconColor: '#2E7D32',
+        borderColor: '#C8E6C9',
+        comingSoon: false,
+        path: '/pages/pitch-frequency/pitch-frequency',
+      },
+    ],
+  },
+]
+
+function countTools(cats: Category[]): number {
+  return cats.reduce((sum, c) => sum + c.tools.length, 0)
+}
+
+Component({
+  data: {
+    categories: ALL_CATEGORIES as Category[],
+    totalCount: countTools(ALL_CATEGORIES),
+    activeCategory: ALL_CATEGORIES[0].id,
+    activeIndex: 0,
+    activeTools: ALL_CATEGORIES[0].tools as Tool[],
   },
 
   pageLifetimes: {
@@ -47,6 +111,18 @@ Component({
   },
 
   methods: {
+    onTabChange(e: WechatMiniprogram.TouchEvent) {
+      const { id } = e.currentTarget.dataset
+      const index = ALL_CATEGORIES.findIndex(c => c.id === id)
+      if (index >= 0) {
+        this.setData({
+          activeCategory: id,
+          activeIndex: index,
+          activeTools: ALL_CATEGORIES[index].tools,
+        })
+      }
+    },
+
     onToolTap(e: WechatMiniprogram.TouchEvent) {
       const { tool } = e.currentTarget.dataset as { tool: Tool }
 

@@ -1,0 +1,65 @@
+<!-- 调号速查表 -->
+<view class="page-container">
+  <navigation-bar title="调号速查" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+
+  <!-- 固定顶栏：大/小调切换 -->
+  <view class="top-bar">
+    <view class="mode-tabs">
+      <view
+        wx:for="{{modes}}"
+        wx:key="value"
+        class="mode-tab {{activeMode === item.value ? 'active' : ''}}"
+        data-mode="{{item.value}}"
+        bind:tap="onModeChange"
+      >{{item.label}}</view>
+    </view>
+  </view>
+
+  <!-- 仅此区域滚动 -->
+  <scroll-view
+    class="scroll-body"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    style="height: {{scrollHeight}}px;"
+  >
+    <view class="scroll-inner">
+      <view wx:for="{{keys}}" wx:key="major" class="key-card">
+        <!-- 标题行 -->
+        <view class="key-header">
+          <view class="key-name-row">
+            <text class="key-name">{{activeMode === 'major' ? item.major : item.minor}}</text>
+            <text class="key-name-zh">{{item.zh}}</text>
+          </view>
+          <!-- 升降号徽标 -->
+          <view wx:if="{{item.sharps > 0 || item.flats > 0}}" class="key-symbol-badge {{item.sharps > 0 ? 'sharp' : 'flat'}}">
+            <text class="key-symbol-text">{{item.symbol}}</text>
+          </view>
+          <view wx:else class="key-symbol-badge none">
+            <text class="key-symbol-text">—</text>
+          </view>
+        </view>
+
+        <!-- 升降号数目 -->
+        <view class="key-count-row" wx:if="{{item.sharps > 0 || item.flats > 0}}">
+          <text class="key-count-label">{{item.sharps > 0 ? '升号' : '降号'}}</text>
+          <text class="key-count-num">{{item.sharps > 0 ? item.sharps : item.flats}} 个</text>
+        </view>
+
+        <!-- 具体升降音 -->
+        <view class="key-notes-row" wx:if="{{item.sharps > 0 || item.flats > 0}}">
+          <text class="key-notes-label">{{item.sharps > 0 ? '♯' : '♭'}}</text>
+          <text class="key-notes-list">{{item.sharps > 0 ? item.sharpNotes : item.flatNotes}}</text>
+        </view>
+
+        <!-- 德语名称 -->
+        <view class="key-de-row">
+          <text class="key-de-label">de</text>
+          <text class="key-de-text">{{item.de}}</text>
+        </view>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

@@ -3,6 +3,9 @@
     "pages/index/index",
     "pages/counter/counter",
     "pages/random/random",
+    "pages/key-signature/key-signature",
+    "pages/note-names/note-names",
+    "pages/pitch-frequency/pitch-frequency",
     "pages/mine/mine",
     "pages/logs/logs"
   ],
