@@ -170,7 +170,7 @@ Component({
       wx.showModal({
         title: '清空记录',
         content: '确定要清空所有历史记录吗？',
-        confirmColor: '#4C6EF5',
+        confirmColor: '#F76707',
         success: (res) => {
           if (res.confirm) {
             this.setData({ history: [] });
