@@ -16,6 +16,7 @@
 |------|------|------|
 | 日常 | 计数器 | `pages/counter/counter` |
 | 日常 | 随机数 | `pages/random/random` |
+| 日常 | 吃点啥 | `pages/what-to-eat/what-to-eat` |
 | 音乐 | 调号速查 | `pages/key-signature/key-signature` |
 | 音乐 | 音名对照 | `pages/note-names/note-names` |
 | 音乐 | 频率对照 | `pages/pitch-frequency/pitch-frequency` |
@@ -61,6 +62,7 @@
         ├── index/               # 首页：分类 Tab + 工具列表（数据驱动）
         ├── counter/             # 计数器
         ├── random/              # 随机数
+        ├── what-to-eat/         # 吃点啥
         ├── key-signature/       # 调号速查
         ├── note-names/          # 音名对照
         ├── pitch-frequency/     # 频率对照
