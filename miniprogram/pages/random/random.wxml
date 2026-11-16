@@ -2,73 +2,119 @@
 <navigation-bar title="随机数" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
 
 <scroll-view class="page" scroll-y enhanced show-scrollbar="{{false}}">
-  <!-- 结果区 -->
-  <view class="result-area">
-    <view class="result-box {{rolling ? 'rolling' : ''}}">
-      <text class="result-value">{{result}}</text>
+  <!-- 结果展示区 -->
+  <view class="hero-area">
+    <view class="result-card {{rolling ? 'rolling' : ''}}">
+      <view class="result-glow"></view>
+      <!-- 单个结果 -->
+      <block wx:if="{{results.length === 1}}">
+        <text class="result-big">{{results[0]}}</text>
+        <text class="result-label">随机结果</text>
+      </block>
+      <!-- 多个结果 -->
+      <block wx:elif="{{results.length > 1}}">
+        <view class="result-multi">
+          <text wx:for="{{results}}" wx:key="index" class="result-bullet">{{item}}</text>
+        </view>
+        <text class="result-label">共 {{results.length}} 个结果</text>
+      </block>
+      <!-- 空状态 -->
+      <block wx:else>
+        <view class="result-placeholder">
+          <text class="placeholder-icon">🎲</text>
+          <text class="placeholder-text">点击下方生成</text>
+        </view>
+      </block>
     </view>
-    <text wx:if="{{result}}" class="result-range">范围 {{min}} ~ {{max}}</text>
+
+    <!-- 范围 & 复制提示 -->
+    <view wx:if="{{results.length > 0}}" class="result-meta">
+      <text class="meta-range">范围 {{min}} ~ {{max}}</text>
+      <text class="meta-copy" bind:tap="onCopyResult">📋 复制</text>
+    </view>
   </view>
 
-  <!-- 范围设置 -->
-  <view class="range-section">
-    <view class="range-row">
-      <text class="range-label">最小值</text>
-      <view class="range-input-wrap">
-        <view class="range-stepper" bind:tap="onMinDec">
-          <text>−</text>
+  <!-- 设置卡片 -->
+  <view class="settings-card">
+    <!-- 范围设置 -->
+    <view class="section-title">范围设置</view>
+    <view class="range-group">
+      <view class="range-item">
+        <text class="range-label">最小值</text>
+        <view class="range-control">
+          <view class="stepper" bind:tap="onMinDec"><text>−</text></view>
+          <input
+            class="range-input"
+            type="number"
+            value="{{min}}"
+            bind:input="onMinInput"
+            bind:blur="onMinBlur"
+          />
+          <view class="stepper" bind:tap="onMinInc"><text>+</text></view>
         </view>
-        <input
-          class="range-input"
-          type="number"
-          value="{{min}}"
-          bind:input="onMinInput"
-          bind:blur="onMinBlur"
-        />
-        <view class="range-stepper" bind:tap="onMinInc">
-          <text>+</text>
+      </view>
+      <view class="range-divider"></view>
+      <view class="range-item">
+        <text class="range-label">最大值</text>
+        <view class="range-control">
+          <view class="stepper" bind:tap="onMaxDec"><text>−</text></view>
+          <input
+            class="range-input"
+            type="number"
+            value="{{max}}"
+            bind:input="onMaxInput"
+            bind:blur="onMaxBlur"
+          />
+          <view class="stepper" bind:tap="onMaxInc"><text>+</text></view>
         </view>
       </view>
     </view>
 
-    <view class="range-divider"></view>
-
-    <view class="range-row">
-      <text class="range-label">最大值</text>
-      <view class="range-input-wrap">
-        <view class="range-stepper" bind:tap="onMaxDec">
-          <text>−</text>
-        </view>
-        <input
-          class="range-input"
-          type="number"
-          value="{{max}}"
-          bind:input="onMaxInput"
-          bind:blur="onMaxBlur"
-        />
-        <view class="range-stepper" bind:tap="onMaxInc">
-          <text>+</text>
-        </view>
+    <!-- 生成数量 -->
+    <view class="section-title" style="margin-top: 28rpx;">生成数量</view>
+    <view class="count-selector">
+      <view
+        wx:for="{{countOptions}}"
+        wx:key="*this"
+        class="count-chip {{count === item ? 'active' : ''}}"
+        data-count="{{item}}"
+        bind:tap="onCountChange"
+      >
+        <text>{{item}}</text>
       </view>
     </view>
-  </view>
 
-  <!-- 快捷范围 -->
-  <view class="presets">
-    <view
-      wx:for="{{presets}}"
-      wx:key="label"
-      class="preset-chip {{min === item.min && max === item.max ? 'active' : ''}}"
-      data-min="{{item.min}}"
-      data-max="{{item.max}}"
-      bind:tap="onPreset"
-    >
-      <text>{{item.label}}</text>
+    <!-- 去重开关 -->
+    <view wx:if="{{count > 1}}" class="duplicate-row">
+      <text class="duplicate-label">不允许重复</text>
+      <view class="toggle {{noDuplicates ? 'on' : ''}}" bind:tap="onToggleDuplicates">
+        <view class="toggle-knob"></view>
+      </view>
     </view>
   </view>
 
   <!-- 生成按钮 -->
   <view class="generate-btn" bind:tap="onGenerate">
+    <text class="btn-icon">🎲</text>
     <text>生成随机数</text>
   </view>
+
+  <!-- 历史记录 -->
+  <view class="history" wx:if="{{history.length > 0}}">
+    <view class="history-header">
+      <text class="history-title">最近记录</text>
+      <text class="history-clear" bind:tap="onClearHistory">清空</text>
+    </view>
+    <view class="history-list">
+      <view wx:for="{{history}}" wx:key="id" class="history-item">
+        <view class="history-numbers">
+          <text wx:for="{{item.numbers}}" wx:for-item="n" wx:key="*this" class="history-num">{{n}}</text>
+        </view>
+        <text class="history-meta">{{item.min}}~{{item.max}} · {{item.time}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部留白 -->
+  <view class="bottom-spacer"></view>
 </scroll-view>
