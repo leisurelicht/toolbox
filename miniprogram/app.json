@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/counter/counter",
     "pages/random/random",
+    "pages/what-to-eat/what-to-eat",
     "pages/key-signature/key-signature",
     "pages/note-names/note-names",
     "pages/pitch-frequency/pitch-frequency",

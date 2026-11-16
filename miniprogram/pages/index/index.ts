@@ -45,6 +45,17 @@ const ALL_CATEGORIES: Category[] = [
         comingSoon: false,
         path: '/pages/random/random',
       },
+      {
+        id: 'what-to-eat',
+        name: '吃点啥',
+        symbol: '吃',
+        description: '选择困难症救星，一键决定吃什么',
+        iconBg: '#FFF4E6',
+        iconColor: '#E8590C',
+        borderColor: '#FFE0C2',
+        comingSoon: false,
+        path: '/pages/what-to-eat/what-to-eat',
+      },
     ],
   },
   {

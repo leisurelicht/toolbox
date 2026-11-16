@@ -1,0 +1,193 @@
+<!-- 吃点啥 -->
+<navigation-bar title="吃点啥" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+
+<view class="page">
+  <!-- 结果 / PK 区 -->
+  <view class="hero">
+    <!-- 二选一淘汰赛 -->
+    <view wx:if="{{pkMode}}" class="pk-card">
+      <view class="pk-head">
+        <text class="pk-round">第 {{pkRound}} / {{pkTotal}} 轮</text>
+        <text class="pk-exit" bind:tap="onExitPk">退出</text>
+      </view>
+      <text class="pk-tip">点一个更想吃的</text>
+      <view class="pk-option" data-index="0" bind:tap="onPkChoose">
+        <text class="pk-name">{{pkPair[0].name}}</text>
+      </view>
+      <view class="pk-vs"><text>VS</text></view>
+      <view class="pk-option" data-index="1" bind:tap="onPkChoose">
+        <text class="pk-name">{{pkPair[1].name}}</text>
+      </view>
+    </view>
+
+    <!-- 抽签结果 -->
+    <view wx:else class="result-card {{rolling ? 'rolling' : ''}}">
+      <view class="result-glow"></view>
+
+      <block wx:if="{{rolling}}">
+        <text class="result-name">{{rollName}}</text>
+        <text class="result-label">正在挑…</text>
+      </block>
+
+      <block wx:elif="{{result}}">
+        <text class="result-name">{{result.name}}</text>
+        <text class="result-meta">{{resultMeta}}</text>
+        <view class="result-actions">
+          <view class="action-ghost" bind:tap="onDraw">换一个</view>
+          <view class="action-primary {{resultAccepted ? 'done' : ''}}" bind:tap="onAccept">
+            {{resultAccepted ? '已记下' : '就它了'}}
+          </view>
+        </view>
+        <button class="share-btn" open-type="share" hover-class="none">分享这个结果</button>
+      </block>
+
+      <block wx:else>
+        <view class="empty-mark"><text>吃</text></view>
+        <text class="result-label">点一下，今天吃这个</text>
+      </block>
+    </view>
+  </view>
+
+  <!-- 抽签按钮 -->
+  <view wx:if="{{!pkMode}}" class="draw-area">
+    <view class="draw-btn" bind:tap="onDraw">
+      <text class="draw-btn-text">{{result ? '再抽一次' : '抽一个'}}</text>
+    </view>
+    <view class="pk-entry" bind:tap="onStartPk">
+      <text>纠结？二选一 PK</text>
+    </view>
+  </view>
+
+  <!-- 筛选设置 -->
+  <view wx:if="{{!pkMode}}" class="settings-card">
+    <view class="section-label">餐次</view>
+    <view class="meal-row">
+      <view
+        wx:for="{{meals}}"
+        wx:key="id"
+        class="meal-chip {{activeMeal === item.id ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bind:tap="onMealChange"
+      >
+        <text>{{item.name}}</text>
+      </view>
+    </view>
+
+    <view class="section-label spaced">类型</view>
+    <view class="category-row">
+      <view
+        wx:for="{{categories}}"
+        wx:key="id"
+        class="category-chip {{activeCategory === item.id ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bind:tap="onCategoryChange"
+      >
+        <text>{{item.name}}</text>
+      </view>
+    </view>
+
+    <view class="switch-group">
+      <view class="switch-row">
+        <view class="switch-text">
+          <text class="switch-title">最近不重复</text>
+          <text class="switch-desc">3 天内吃过的先不抽</text>
+        </view>
+        <view class="toggle {{noRepeat ? 'on' : ''}}" bind:tap="onToggleRepeat">
+          <view class="toggle-knob"></view>
+        </view>
+      </view>
+
+      <view class="switch-row">
+        <view class="switch-text">
+          <text class="switch-title">摇一摇抽签</text>
+          <text class="switch-desc">晃动手机也能抽</text>
+        </view>
+        <view class="toggle {{shakeEnabled ? 'on' : ''}}" bind:tap="onToggleShake">
+          <view class="toggle-knob"></view>
+        </view>
+      </view>
+    </view>
+
+    <view class="pool-info">
+      <text>当前可选 {{poolCount}} 道</text>
+      <text wx:if="{{poolHint}}" class="pool-hint">{{poolHint}}</text>
+    </view>
+  </view>
+
+  <!-- 我的菜单 -->
+  <view wx:if="{{!pkMode}}" class="menu-card">
+    <view class="menu-head" bind:tap="onToggleManage">
+      <view class="menu-title-wrap">
+        <text class="menu-title">我的菜单</text>
+        <text class="menu-count">{{totalCount}} 道</text>
+      </view>
+      <text class="menu-action">{{manageOpen ? '收起' : '管理'}}</text>
+    </view>
+
+    <view wx:if="{{manageOpen}}" class="menu-body">
+      <view class="add-row">
+        <input
+          class="add-input"
+          placeholder="输入菜名，如 番茄牛腩"
+          placeholder-style="color: #B0B5C0"
+          value="{{newDishName}}"
+          maxlength="12"
+          confirm-type="done"
+          bind:input="onDishNameInput"
+          bind:confirm="onAddDish"
+        />
+        <view class="add-btn" bind:tap="onAddDish"><text>添加</text></view>
+      </view>
+
+      <view class="add-meals">
+        <text class="add-meals-label">供应餐次</text>
+        <view
+          wx:for="{{meals}}"
+          wx:key="id"
+          class="meal-mini {{newDishMeals[item.id] ? 'active' : ''}}"
+          data-id="{{item.id}}"
+          bind:tap="onToggleDishMeal"
+        >
+          <text>{{item.name}}</text>
+        </view>
+      </view>
+
+      <view class="dish-toolbar">
+        <text class="dish-toolbar-title">菜品库 {{totalCount}} 道</text>
+        <text
+          wx:if="{{removedPresetIds.length > 0}}"
+          class="dish-restore"
+          bind:tap="onRestorePresets"
+        >恢复内置</text>
+      </view>
+
+      <view wx:if="{{allDishes.length === 0}}" class="menu-empty">
+        <text>菜单空了，先添加一道想吃的菜</text>
+      </view>
+      <view wx:else class="dish-grid">
+        <view wx:for="{{allDishes}}" wx:key="id" class="dish-chip {{item.custom ? 'custom' : ''}}">
+          <text class="dish-chip-name">{{item.name}}</text>
+          <view class="dish-chip-del" data-id="{{item.id}}" bind:tap="onDeleteDish">
+            <text>×</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 最近吃过 -->
+  <view wx:if="{{!pkMode && history.length > 0}}" class="history-card">
+    <view class="history-head">
+      <text class="history-title">最近吃过</text>
+      <text class="history-clear" bind:tap="onClearHistory">清空</text>
+    </view>
+    <view class="history-list">
+      <view wx:for="{{history}}" wx:key="id" class="history-item">
+        <text class="history-name">{{item.name}}</text>
+        <text class="history-time">{{item.timeLabel}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="bottom-spacer"></view>
+</view>
