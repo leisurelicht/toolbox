@@ -17,12 +17,19 @@
 | 日常 | 计数器 | `pages/counter/counter` |
 | 日常 | 随机数 | `pages/random/random` |
 | 日常 | 吃点啥 | `pages/what-to-eat/what-to-eat` |
+| 日常 | 日期计算 | `pages/date-calc/date-calc` |
+| 日常 | 算账 | `pages/bill-calc/bill-calc` |
+| 日常 | 单位换算 | `pages/unit-convert/unit-convert` |
+| 日常 | 旅行打包 | `pages/packing-list/packing-list` |
 | 日常 | 涨了吗 | `pages/fund-premium/fund-premium` |
+| 音乐 | 节拍器 | `pages/metronome/metronome` |
+| 音乐 | 练耳训练 | `pages/ear-training/ear-training` |
 | 音乐 | 调号速查 | `pages/key-signature/key-signature` |
 | 音乐 | 音名对照 | `pages/note-names/note-names` |
 | 音乐 | 频率对照 | `pages/pitch-frequency/pitch-frequency` |
 | 音乐 | 音程计算 | `pages/interval-calculator/interval-calculator` |
 | 音乐 | 术语词典 | `pages/music-terms/music-terms` |
+| 音乐 | 装饰音记号 | `pages/ornaments/ornaments` |
 | 音乐 | 调式音阶 | `pages/modes-scales/modes-scales` |
 | 音乐 | 移调 | `pages/transpose/transpose` |
 | 音乐 | 和弦反查 | `pages/chord-finder/chord-finder` |
@@ -32,6 +39,7 @@
 | 音乐 | 速度对照 | `pages/tempo-marks/tempo-marks` |
 | 音乐 | 时值计算 | `pages/rhythm-calculator/rhythm-calculator` |
 | 音乐 | 乐器音域 | `pages/instrument-range/instrument-range` |
+| 音乐 | 音乐史年表 | `pages/music-history/music-history` |
 
 > 「涨了吗」的基金详情页为 `pages/fund-detail/fund-detail`，属于该工具的辅助页面，不单独列为工具。
 
@@ -80,6 +88,10 @@
         ├── counter/             # 计数器
         ├── random/              # 随机数
         ├── what-to-eat/         # 吃点啥
+        ├── date-calc/           # 日期计算
+        ├── bill-calc/           # 算账
+        ├── unit-convert/        # 单位换算
+        ├── packing-list/        # 旅行打包
         ├── key-signature/       # 调号速查
         ├── note-names/          # 音名对照
         ├── pitch-frequency/     # 频率对照
@@ -110,8 +122,8 @@
 
 导航栏是普通文档流元素（不是 fixed），**位置取决于滚动模式**（见 §5.3）：
 
-- **固定顶栏 + 局部滚动**（index / key-signature / pitch-frequency 及所有工具内容页）：放进 `position: fixed` 的 `.page-container` 内部。
-- **页面整体滚动**（mine / random / what-to-eat 等早期页面）：放在 `.wxml` 顶部、页面容器之外。
+- **固定顶栏 + 局部滚动**（index / mine / key-signature / pitch-frequency 及所有工具内容页）：放进 `position: fixed` 的 `.page-container` 内部。
+- **页面整体滚动**（random / what-to-eat 等早期页面）：放在 `.wxml` 顶部、页面容器之外。
 - 导航栏前允许有注释；"首行"不是硬性要求，**层级位置**才是。
 
 ```html
@@ -138,10 +150,20 @@
   borderColor: '#DBE4FF',
   comingSoon: false,              // 未上线工具置 true，点击时提示
   path: '/pages/tool-id/tool-id',
+  sub: 'theory',                  // 仅音乐类必填，见下方二级分类
 }
 ```
 
-`totalCount` 由 `countTools()` 自动计算，**不要**手改。
+**音乐类二级分类**（`Category.subcats`，日常类为空数组、不显示二级筛选）：
+
+| id | 名称 | 含义 |
+|:---|:---|:---|
+| `theory` | 乐理基础 | 查概念：调、音、谱、记号 |
+| `calc` | 计算工具 | 算结果：音程、移调、和弦、时值、频率、律制 |
+| `ref` | 术语参考 | 查资料：术语、速度、乐器音域 |
+| `train` | 训练历史 | 用起来：节拍、听辨、史论 |
+
+`totalCount` 由 `countTools()` 自动计算，**不要**手改。切换一级 Tab 会重置二级筛选为「全部」，并在 `setData` 回调里用 `wx.nextTick` 重新测滚动区高度（顶栏高度会因二级栏出现/消失而变化）。
 
 ### 4.4 图标规范
 
@@ -228,7 +250,7 @@
 
 先选滚动模式，再写 WXML/SCSS。仓库现有三种，选错就会出现"顶部跟着滚""底部被裁""双滚动条"。
 
-**模式 A：页面整体滚动**（mine / random / what-to-eat 等早期页面）
+**模式 A：页面整体滚动**（random / what-to-eat 等早期页面）
 
 - 导航栏在 `.wxml` 顶部，由页面自身滚动，或用一个 `height: 100vh` 的 `scroll-view` 承担滚动。
 - 用 `100vh` 时导航栏也在文档流里额外占高，底部内容可能被裁；需要精确控制或固定顶栏时改用模式 C，或把滚动区高度扣掉导航栏。
@@ -241,7 +263,7 @@
 - 导航栏在容器之外，容器用 `height: 100vh` + `overflow: hidden`。
 - 此时页面总高 = 导航栏 + `100vh`，底部会超出视口；**必须真机确认底部按钮/内容没有被裁**。底部留白加在滚动内容里，不要指望页面滚动。
 
-**模式 C：固定容器 + JS 测高**（index / key-signature / pitch-frequency 及全部工具内容页）
+**模式 C：固定容器 + JS 测高**（index / mine / key-signature / pitch-frequency 及全部工具内容页）
 
 - `.page-container`：`position: fixed; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; overflow: hidden;`（比 `height: 100vh` 更稳）
 - `<navigation-bar>` **放在**这个固定容器内部；固定区（导航栏、Tab、筛选条）加 `flex-shrink: 0`。
@@ -302,7 +324,7 @@ function applyScrollHeight(inst: any) {
    - `.ts` 用 `Component({})`
    - 测高滚动参考 `key-signature`；`wx.showModal` 二次确认、撤销逻辑参考 `counter`；历史列表参考 `random`
 3. **注册页面**：在 `miniprogram/app.json` 的 `pages` 数组中加 `"pages/<tool-id>/<tool-id>"`，**放在 `pages/mine/mine` 之前**（唯一例外是 `pages/logs/logs`，它固定在末尾）。
-4. **注册到首页**：在 `pages/index/index.ts` 的 `ALL_CATEGORIES` 对应分类的 `tools` 中加一条数据。
+4. **注册到首页**：在 `pages/index/index.ts` 的 `ALL_CATEGORIES` 对应分类的 `tools` 中加一条数据；音乐类工具**必须**填写 `sub`（`theory` / `calc` / `ref` / `train`）。
 5. **更新本文件 §1 的工具表格**。
 6. **自检**：
    - [ ] 滚动模式已选定；导航栏层级符合 §4.2
