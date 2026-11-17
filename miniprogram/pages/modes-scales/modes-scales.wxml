@@ -2,10 +2,7 @@
 <view class="page-container">
   <view class="top-bar">
     <navigation-bar title="调式音阶" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
-  </view>
-
-  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
-    <view class="content">
+    <view class="settings">
       <!-- 主音选择 -->
       <view class="panel">
         <view class="panel-head">
@@ -34,7 +31,11 @@
           </view>
         </view>
       </view>
+    </view>
+  </view>
 
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
       <!-- 音阶列表 -->
       <view class="scale-card" wx:for="{{scales}}" wx:key="id">
         <view class="scale-head">

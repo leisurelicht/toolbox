@@ -39,6 +39,13 @@ page {
 .content {
   width: 100%;
   box-sizing: border-box;
+  padding: 16rpx 32rpx 0;
+}
+
+/* 固定设置区 */
+.settings {
+  width: 100%;
+  box-sizing: border-box;
   padding: 24rpx 32rpx 0;
 }
 

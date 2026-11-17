@@ -2,10 +2,7 @@
 <view class="page-container">
   <view class="top-bar">
     <navigation-bar title="音程计算" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
-  </view>
-
-  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
-    <view class="content">
+    <view class="settings">
       <!-- 结果卡片 -->
       <view class="result-card">
         <text class="result-formula">{{result.note1}} → {{result.note2}}</text>
@@ -45,7 +42,11 @@
         <text class="swap-icon">⇅</text>
         <text class="swap-text">交换两音方向</text>
       </view>
+    </view>
+  </view>
 
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
       <!-- 音 1 -->
       <view class="picker-card">
         <view class="picker-head">
