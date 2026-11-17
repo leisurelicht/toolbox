@@ -1,0 +1,259 @@
+/* ========================================
+   调式音阶速查
+   滚动模式 A：页面整体滚动
+   ======================================== */
+
+.page {
+  height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  background: #FBFBFD;
+}
+
+.content {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24rpx 32rpx 0;
+}
+
+/* ===== 主音面板 ===== */
+.panel {
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFF;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.panel-title {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+}
+
+.panel-current {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #4C6EF5;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+/* 12 个主音：4 列 3 行 */
+.root-grid {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.root-cell {
+  width: 25%;
+  box-sizing: border-box;
+  padding: 6rpx;
+}
+
+.root-text {
+  display: block;
+  height: 72rpx;
+  line-height: 72rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #6B7280;
+  background: #F5F6FA;
+  border-radius: 16rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.03);
+  font-family: 'Georgia', 'Times New Roman', serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.root-text.active {
+  color: #FFF;
+  background: #4C6EF5;
+  border: 1rpx solid #4C6EF5;
+}
+
+.root-cell:active {
+  opacity: 0.75;
+}
+
+/* 升降号切换 */
+.spell-row {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 16rpx;
+}
+
+.spell-chip {
+  flex: 1;
+  min-width: 0;
+  height: 68rpx;
+  margin-right: 12rpx;
+  border-radius: 16rpx;
+  background: #F5F6FA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.spell-chip:last-child {
+  margin-right: 0;
+}
+
+.spell-chip.active {
+  background: #EEF2FF;
+  border: 1rpx solid #C7D2FE;
+}
+
+.spell-chip:active {
+  opacity: 0.75;
+}
+
+.spell-text {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+.spell-chip.active .spell-text {
+  color: #4C6EF5;
+}
+
+/* ===== 音阶卡片 ===== */
+.scale-card {
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFF;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-top: 16rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.scale-head {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 20rpx;
+}
+
+.scale-name {
+  flex-shrink: 0;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+  margin-right: 12rpx;
+}
+
+.scale-en {
+  flex: 1;
+  min-width: 0;
+  font-size: 22rpx;
+  color: #B0B5C0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 构成音 */
+.note-row {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.note-chip {
+  flex: 1;
+  min-width: 0;
+  height: 64rpx;
+  margin-right: 6rpx;
+  border-radius: 12rpx;
+  background: #F5F6FA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.note-chip:last-child {
+  margin-right: 0;
+}
+
+.note-chip.root {
+  background: #EEF2FF;
+}
+
+.note-text {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #4B5563;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.note-chip.root .note-text {
+  color: #4C6EF5;
+}
+
+/* 音程结构 */
+.struct-row {
+  display: flex;
+  align-items: center;
+  margin-top: 18rpx;
+}
+
+.struct-key {
+  flex-shrink: 0;
+  width: 68rpx;
+  font-size: 22rpx;
+  color: #B0B5C0;
+}
+
+.struct-val {
+  flex: 1;
+  min-width: 0;
+  font-size: 22rpx;
+  color: #6B7280;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 说明 */
+.scale-desc {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  color: #9CA3AF;
+  line-height: 1.6;
+}
+
+/* 底部说明 */
+.note-tip {
+  padding: 24rpx 8rpx 0;
+}
+
+.note-tip text {
+  font-size: 22rpx;
+  color: #B0B5C0;
+  line-height: 1.6;
+}
+
+.bottom-safe {
+  height: 60rpx;
+}

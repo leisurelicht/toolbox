@@ -1,0 +1,319 @@
+/* ========================================
+   音程计算器
+   滚动模式 A：页面整体滚动
+   ======================================== */
+
+.page {
+  height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  background: #FBFBFD;
+}
+
+.content {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24rpx 32rpx 0;
+}
+
+/* ===== 结果卡片 ===== */
+.result-card {
+  width: 100%;
+  box-sizing: border-box;
+  background: #1E1E2E;
+  border-radius: 28rpx;
+  padding: 40rpx 32rpx 28rpx;
+  overflow: hidden;
+}
+
+.result-formula {
+  display: block;
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.55);
+  font-family: 'Georgia', 'Times New Roman', serif;
+  text-align: center;
+}
+
+.result-name {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 66rpx;
+  font-weight: 800;
+  color: #FFF;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 32rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.12);
+}
+
+.meta-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
+}
+
+.meta-value {
+  font-size: 38rpx;
+  font-weight: 700;
+  color: #FFF;
+  line-height: 1.2;
+}
+
+.meta-value-text {
+  font-size: 26rpx;
+}
+
+.meta-label {
+  font-size: 20rpx;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 6rpx;
+}
+
+.meta-line {
+  width: 1rpx;
+  height: 40rpx;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.result-foot {
+  margin-top: 24rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid rgba(255, 255, 255, 0.12);
+}
+
+.foot-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10rpx;
+}
+
+.foot-item:last-child {
+  margin-bottom: 0;
+}
+
+.foot-key {
+  flex-shrink: 0;
+  width: 76rpx;
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.foot-val {
+  flex: 1;
+  min-width: 0;
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.5;
+}
+
+/* ===== 交换按钮 ===== */
+.swap-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20rpx 0;
+  padding: 18rpx 0;
+  background: #FFF;
+  border-radius: 20rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+}
+
+.swap-row:active {
+  background: #F5F6FA;
+}
+
+.swap-icon {
+  font-size: 30rpx;
+  color: #4C6EF5;
+  margin-right: 10rpx;
+}
+
+.swap-text {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #4C6EF5;
+}
+
+/* ===== 音符选择卡片 ===== */
+.picker-card {
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFF;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 16rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.picker-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.picker-title {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+}
+
+.picker-current {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #4C6EF5;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.chip-row {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 12rpx;
+}
+
+.chip-row.small {
+  margin-bottom: 0;
+}
+
+.letter-chip {
+  flex: 1;
+  min-width: 0;
+  height: 76rpx;
+  margin-right: 8rpx;
+  border-radius: 16rpx;
+  background: #F5F6FA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.letter-chip:last-child {
+  margin-right: 0;
+}
+
+.letter-chip.active {
+  background: #EEF2FF;
+  border: 1rpx solid #C7D2FE;
+}
+
+.letter-chip.active .chip-text {
+  color: #4C6EF5;
+}
+
+.letter-chip:active {
+  opacity: 0.7;
+}
+
+.acc-chip {
+  flex: 1;
+  min-width: 0;
+  height: 68rpx;
+  margin-right: 8rpx;
+  border-radius: 16rpx;
+  background: #F5F6FA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.acc-chip:last-child {
+  margin-right: 0;
+}
+
+.acc-chip.active {
+  background: #EEF2FF;
+  border: 1rpx solid #C7D2FE;
+}
+
+.acc-chip.active .chip-text {
+  color: #4C6EF5;
+}
+
+.acc-chip:active {
+  opacity: 0.7;
+}
+
+.chip-text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #6B7280;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+/* ===== 参考表 ===== */
+.ref-card {
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFF;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-top: 8rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.ref-title {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+  margin-bottom: 16rpx;
+}
+
+.ref-row {
+  display: flex;
+  align-items: center;
+  padding: 12rpx 0;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+
+.ref-row:last-child {
+  border-bottom: none;
+}
+
+.ref-sem {
+  flex-shrink: 0;
+  width: 56rpx;
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #B0B5C0;
+  font-variant-numeric: tabular-nums;
+}
+
+.ref-name {
+  flex: 1;
+  min-width: 0;
+  font-size: 26rpx;
+  color: #444;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ===== 底部说明 ===== */
+.note-tip {
+  padding: 24rpx 8rpx 0;
+}
+
+.note-tip text {
+  font-size: 22rpx;
+  color: #B0B5C0;
+  line-height: 1.6;
+}
+
+.bottom-safe {
+  height: 60rpx;
+}

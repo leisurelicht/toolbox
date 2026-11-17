@@ -1,0 +1,63 @@
+<!-- 音乐术语词典 -->
+<navigation-bar title="音乐术语" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+
+<scroll-view class="page" scroll-y enhanced show-scrollbar="{{false}}">
+  <view class="content">
+    <!-- 搜索 -->
+    <view class="search-box">
+      <text class="search-icon">⌕</text>
+      <input
+        class="search-input"
+        value="{{keyword}}"
+        placeholder="搜索术语或中文含义"
+        placeholder-class="search-ph"
+        bindinput="onInput"
+        confirm-type="search"
+      />
+      <view wx:if="{{keyword}}" class="search-clear" bind:tap="onClear">
+        <text class="search-clear-text">✕</text>
+      </view>
+    </view>
+
+    <!-- 分类筛选 -->
+    <view class="cat-grid">
+      <view
+        wx:for="{{cats}}"
+        wx:key="*this"
+        class="cat-chip {{activeCat === item ? 'active' : ''}}"
+        data-cat="{{item}}"
+        bind:tap="onCat"
+      >
+        <text class="cat-text">{{item}}</text>
+      </view>
+    </view>
+
+    <!-- 数量 -->
+    <view class="count-line">
+      <text class="count-text">共 {{count}} 条</text>
+    </view>
+
+    <!-- 术语列表 -->
+    <view class="term-card" wx:for="{{visible}}" wx:key="key">
+      <view class="term-head">
+        <text class="term-name">{{item.term}}</text>
+        <view class="term-badges">
+          <view class="badge badge-lang">
+            <text class="badge-text">{{item.lang}}</text>
+          </view>
+          <view class="badge badge-cat">
+            <text class="badge-text">{{item.cat}}</text>
+          </view>
+        </view>
+      </view>
+      <text class="term-zh">{{item.zh}}</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty" wx:if="{{count === 0}}">
+      <text class="empty-text">没有找到匹配的术语</text>
+    </view>
+
+    <view class="bottom-safe"></view>
+  </view>
+</scroll-view>

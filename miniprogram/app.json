@@ -7,6 +7,9 @@
     "pages/key-signature/key-signature",
     "pages/note-names/note-names",
     "pages/pitch-frequency/pitch-frequency",
+    "pages/interval-calculator/interval-calculator",
+    "pages/music-terms/music-terms",
+    "pages/modes-scales/modes-scales",
     "pages/mine/mine",
     "pages/logs/logs"
   ],
