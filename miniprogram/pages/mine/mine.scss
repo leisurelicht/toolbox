@@ -353,3 +353,89 @@ page {
   width: 100%;
   height: 140rpx;
 }
+
+/* ---- 关于弹窗 ---- */
+.modal-mask {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(17, 24, 39, 0.45);
+}
+
+.about-card {
+  width: 560rpx;
+  box-sizing: border-box;
+  background: #FFFFFF;
+  border-radius: 28rpx;
+  overflow: hidden;
+}
+
+.about-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 44rpx 40rpx 0;
+}
+
+.about-title {
+  font-size: 34rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+  text-align: center;
+}
+
+.about-version {
+  margin-top: 10rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #9CA3AF;
+  letter-spacing: 1rpx;
+  text-align: center;
+}
+
+.about-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24rpx 40rpx 40rpx;
+}
+
+.about-desc {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 26rpx;
+  color: #6B7280;
+  line-height: 40rpx;
+  text-align: center;
+}
+
+.about-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  height: 100rpx;
+  border-top: 1rpx solid rgba(0, 0, 0, 0.06);
+}
+
+.about-action:active {
+  background: #F8F9FC;
+}
+
+.about-action text {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #4C6EF5;
+}

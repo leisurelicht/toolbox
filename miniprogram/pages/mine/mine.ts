@@ -90,6 +90,7 @@ Component({
     quickTools: QUICK_TOOLS as QuickTool[],
     tips: TIPS as Tip[],
     scrollHeight: 0,
+    showAbout: false,
   },
 
   lifetimes: {
@@ -131,14 +132,14 @@ Component({
     },
 
     onTapAbout() {
-      wx.showModal({
-        title: '关于工具箱',
-        content:
-          '工具箱 v1.0.0\n一个持续生长的轻量工具合集\n涵盖日常与音乐 20 余个工具，全部免费。',
-        showCancel: false,
-        confirmText: '知道了',
-      })
+      this.setData({ showAbout: true })
     },
+
+    closeAbout() {
+      this.setData({ showAbout: false })
+    },
+
+    noop() {},
 
     onTapFeedback() {
       wx.showModal({

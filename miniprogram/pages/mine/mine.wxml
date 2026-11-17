@@ -120,4 +120,21 @@
       <view class="bottom-spacer"></view>
     </view>
   </scroll-view>
+
+  <!-- 关于弹窗：原生 showModal 无法稳定换行，这里用自定义弹层 -->
+  <view wx:if="{{showAbout}}" class="modal-mask" bind:tap="closeAbout">
+    <view class="about-card" catch:tap="noop">
+      <view class="about-head">
+        <text class="about-title">关于工具箱</text>
+        <text class="about-version">v1.0.0</text>
+      </view>
+      <view class="about-body">
+        <text class="about-desc">一个持续生长的轻量工具合集</text>
+        <text class="about-desc">涵盖日常与音乐 20 余个工具，全部免费。</text>
+      </view>
+      <view class="about-action" bind:tap="closeAbout">
+        <text>知道了</text>
+      </view>
+    </view>
+  </view>
 </view>
