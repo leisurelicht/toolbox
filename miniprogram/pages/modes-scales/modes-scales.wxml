@@ -1,67 +1,71 @@
 <!-- 调式音阶速查 -->
-<navigation-bar title="调式音阶" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
-
-<scroll-view class="page" scroll-y enhanced show-scrollbar="{{false}}">
-  <view class="content">
-    <!-- 主音选择 -->
-    <view class="panel">
-      <view class="panel-head">
-        <text class="panel-title">主音</text>
-        <text class="panel-current">{{currentRootLabel}}</text>
-      </view>
-
-      <view class="root-grid">
-        <view
-          wx:for="{{roots}}"
-          wx:key="label"
-          class="root-cell"
-          data-index="{{index}}"
-          bind:tap="onRoot"
-        >
-          <text class="root-text {{activeRootIndex === index ? 'active' : ''}}">{{item.label}}</text>
-        </view>
-      </view>
-
-      <view class="spell-row">
-        <view class="spell-chip {{useFlat ? '' : 'active'}}" data-mode="sharp" bind:tap="onSpell">
-          <text class="spell-text">升号 ♯</text>
-        </view>
-        <view class="spell-chip {{useFlat ? 'active' : ''}}" data-mode="flat" bind:tap="onSpell">
-          <text class="spell-text">降号 ♭</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 音阶列表 -->
-    <view class="scale-card" wx:for="{{scales}}" wx:key="id">
-      <view class="scale-head">
-        <text class="scale-name">{{item.name}}</text>
-        <text class="scale-en">{{item.en}}</text>
-      </view>
-
-      <view class="note-row">
-        <view
-          wx:for="{{item.notes}}"
-          wx:for-item="note"
-          wx:key="name"
-          class="note-chip {{note.isRoot ? 'root' : ''}}"
-        >
-          <text class="note-text">{{note.name}}</text>
-        </view>
-      </view>
-
-      <view class="struct-row">
-        <text class="struct-key">结构</text>
-        <text class="struct-val">{{item.structure}}</text>
-      </view>
-
-      <text class="scale-desc">{{item.desc}}</text>
-    </view>
-
-    <view class="note-tip">
-      <text>音名按字母级数正确书写，因此可能出现 E♯、C♭、F♯♯ 等形式</text>
-    </view>
-
-    <view class="bottom-safe"></view>
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="调式音阶" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
   </view>
-</scroll-view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <!-- 主音选择 -->
+      <view class="panel">
+        <view class="panel-head">
+          <text class="panel-title">主音</text>
+          <text class="panel-current">{{currentRootLabel}}</text>
+        </view>
+
+        <view class="root-grid">
+          <view
+            wx:for="{{roots}}"
+            wx:key="label"
+            class="root-cell"
+            data-index="{{index}}"
+            bind:tap="onRoot"
+          >
+            <text class="root-text {{activeRootIndex === index ? 'active' : ''}}">{{item.label}}</text>
+          </view>
+        </view>
+
+        <view class="spell-row">
+          <view class="spell-chip {{useFlat ? '' : 'active'}}" data-mode="sharp" bind:tap="onSpell">
+            <text class="spell-text">升号 ♯</text>
+          </view>
+          <view class="spell-chip {{useFlat ? 'active' : ''}}" data-mode="flat" bind:tap="onSpell">
+            <text class="spell-text">降号 ♭</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 音阶列表 -->
+      <view class="scale-card" wx:for="{{scales}}" wx:key="id">
+        <view class="scale-head">
+          <text class="scale-name">{{item.name}}</text>
+          <text class="scale-en">{{item.en}}</text>
+        </view>
+
+        <view class="note-row">
+          <view
+            wx:for="{{item.notes}}"
+            wx:for-item="note"
+            wx:key="name"
+            class="note-chip {{note.isRoot ? 'root' : ''}}"
+          >
+            <text class="note-text">{{note.name}}</text>
+          </view>
+        </view>
+
+        <view class="struct-row">
+          <text class="struct-key">结构</text>
+          <text class="struct-val">{{item.structure}}</text>
+        </view>
+
+        <text class="scale-desc">{{item.desc}}</text>
+      </view>
+
+      <view class="note-tip">
+        <text>音名按字母级数正确书写，因此可能出现 E♯、C♭、F♯♯ 等形式</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

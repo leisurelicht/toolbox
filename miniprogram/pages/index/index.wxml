@@ -1,68 +1,79 @@
 <!-- 工具箱首页 -->
-<navigation-bar title="工具箱" back="{{false}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+<view class="page-container">
+  <navigation-bar title="工具箱" back="{{false}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
 
-<scroll-view class="page" scroll-y enhanced show-scrollbar="{{false}}">
-  <!-- Hero -->
-  <view class="hero">
-    <view class="hero-badge">
-      <view class="badge-dot"></view>
-      <text>轻量工具箱</text>
-    </view>
-    <view class="hero-title">随手实用</view>
-    <view class="hero-sub">精选 {{totalCount}} 个工具，保持简单高效</view>
-  </view>
-
-  <!-- Tab 切换栏 -->
-  <view class="tab-bar">
-    <view
-      wx:for="{{categories}}"
-      wx:key="id"
-      class="tab-item {{activeCategory === item.id ? 'active' : ''}}"
-      data-id="{{item.id}}"
-      bind:tap="onTabChange"
-    >
-      <text class="tab-icon">{{item.icon}}</text>
-      <text class="tab-name">{{item.name}}</text>
-    </view>
-    <!-- 滑动指示条 -->
-    <view
-      class="tab-indicator"
-      style="width: {{100 / categories.length}}%; transform: translateX({{activeIndex * 100}}%);"
-    >
-      <view class="tab-indicator-inner"></view>
-    </view>
-  </view>
-
-  <!-- 当前分类的工具列表 -->
-  <view class="tool-list">
-    <view
-      wx:for="{{activeTools}}"
-      wx:key="id"
-      class="tool-card {{item.comingSoon ? 'is-pending' : ''}}"
-      data-tool="{{item}}"
-      bind:tap="onToolTap"
-    >
-      <!-- 图标 -->
-      <view class="card-icon" style="background: {{item.iconBg}};">
-        <text class="card-icon-text" style="color: {{item.iconColor}};">{{item.symbol}}</text>
+  <!-- 固定区：Hero + 分类 Tab -->
+  <view class="top-bar">
+    <view class="hero">
+      <view class="hero-badge">
+        <view class="badge-dot"></view>
+        <text>轻量工具箱</text>
       </view>
-      <!-- 内容 -->
-      <view class="card-main">
-        <view class="card-head">
-          <text class="card-name">{{item.name}}</text>
-          <view wx:if="{{item.comingSoon}}" class="card-tag">
-            <text>即将推出</text>
+      <view class="hero-title">随手实用</view>
+      <view class="hero-sub">精选 {{totalCount}} 个工具，保持简单高效</view>
+    </view>
+
+    <view class="tab-bar">
+      <view
+        wx:for="{{categories}}"
+        wx:key="id"
+        class="tab-item {{activeCategory === item.id ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bind:tap="onTabChange"
+      >
+        <text class="tab-icon">{{item.icon}}</text>
+        <text class="tab-name">{{item.name}}</text>
+      </view>
+      <!-- 滑动指示条 -->
+      <view
+        class="tab-indicator"
+        style="width: {{100 / categories.length}}%; transform: translateX({{activeIndex * 100}}%);"
+      >
+        <view class="tab-indicator-inner"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 仅此区域滚动：当前分类的工具列表 -->
+  <scroll-view
+    class="scroll-body"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    style="height: {{scrollHeight}}px;"
+  >
+    <view class="scroll-inner">
+      <view class="tool-list">
+        <view
+          wx:for="{{activeTools}}"
+          wx:key="id"
+          class="tool-card {{item.comingSoon ? 'is-pending' : ''}}"
+          data-tool="{{item}}"
+          bind:tap="onToolTap"
+        >
+          <!-- 图标 -->
+          <view class="card-icon" style="background: {{item.iconBg}};">
+            <text class="card-icon-text" style="color: {{item.iconColor}};">{{item.symbol}}</text>
+          </view>
+          <!-- 内容 -->
+          <view class="card-main">
+            <view class="card-head">
+              <text class="card-name">{{item.name}}</text>
+              <view wx:if="{{item.comingSoon}}" class="card-tag">
+                <text>即将推出</text>
+              </view>
+            </view>
+            <text class="card-desc">{{item.description}}</text>
+          </view>
+          <!-- 箭头 -->
+          <view class="card-arrow">
+            <text>›</text>
           </view>
         </view>
-        <text class="card-desc">{{item.description}}</text>
       </view>
-      <!-- 箭头 -->
-      <view class="card-arrow">
-        <text>›</text>
-      </view>
-    </view>
-  </view>
 
-  <!-- 底部留白 -->
-  <view class="bottom-spacer"></view>
-</scroll-view>
+      <!-- 底部留白：避开自定义 TabBar -->
+      <view class="bottom-spacer"></view>
+    </view>
+  </scroll-view>
+</view>

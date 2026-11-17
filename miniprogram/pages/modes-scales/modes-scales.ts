@@ -194,8 +194,32 @@ function buildViews(root: Root): ScaleView[] {
 
 const INIT_ROOT = SHARP_ROOTS[0]
 
+/* 计算滚动区高度 = 视口高度 - 固定顶栏占用高度（含导航栏） */
+function applyScrollHeight(inst: any) {
+  const query = wx.createSelectorQuery()
+  query.select('.page-container').boundingClientRect()
+  query.select('.top-bar').boundingClientRect()
+  query.exec((res: any[]) => {
+    const container = res && res[0]
+    const topBar = res && res[1]
+    let h = 0
+    if (container && topBar) {
+      h = Math.round(container.height - (topBar.bottom - container.top))
+    }
+    if (!h || h <= 0) {
+      /* 兜底估算：导航栏 44px + 状态栏 */
+      const info = wx.getSystemInfoSync()
+      h = Math.round(info.windowHeight - 44 - (info.statusBarHeight || 0) - 40)
+    }
+    if (h > 0) {
+      inst.setData({ scrollHeight: h })
+    }
+  })
+}
+
 Component({
   data: {
+    scrollHeight: 0,
     useFlat: false,
     roots: SHARP_ROOTS,
     activeRootIndex: 0,
@@ -236,6 +260,11 @@ Component({
         currentRootLabel: root.label,
         scales: buildViews(root),
       })
+    },
+  },
+  lifetimes: {
+    ready() {
+      applyScrollHeight(this)
     },
   },
 })

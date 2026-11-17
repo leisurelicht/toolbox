@@ -1,121 +1,125 @@
 <!-- 音程计算器 -->
-<navigation-bar title="音程计算" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
-
-<scroll-view class="page" scroll-y enhanced show-scrollbar="{{false}}">
-  <view class="content">
-    <!-- 结果卡片 -->
-    <view class="result-card">
-      <text class="result-formula">{{result.note1}} → {{result.note2}}</text>
-      <text class="result-name">{{result.name}}</text>
-
-      <view class="meta-row">
-        <view class="meta-item">
-          <text class="meta-value">{{result.semitones}}</text>
-          <text class="meta-label">半音</text>
-        </view>
-        <view class="meta-line"></view>
-        <view class="meta-item">
-          <text class="meta-value">{{result.wholeToneText}}</text>
-          <text class="meta-label">全音</text>
-        </view>
-        <view class="meta-line"></view>
-        <view class="meta-item">
-          <text class="meta-value meta-value-text">{{result.consonance}}</text>
-          <text class="meta-label">协和性</text>
-        </view>
-      </view>
-
-      <view class="result-foot">
-        <view class="foot-item">
-          <text class="foot-key">转位</text>
-          <text class="foot-val">{{result.inversion}}</text>
-        </view>
-        <view class="foot-item" wx:if="{{result.tip}}">
-          <text class="foot-key">提示</text>
-          <text class="foot-val">{{result.tip}}</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 交换 -->
-    <view class="swap-row" bind:tap="onSwap">
-      <text class="swap-icon">⇅</text>
-      <text class="swap-text">交换两音方向</text>
-    </view>
-
-    <!-- 音 1 -->
-    <view class="picker-card">
-      <view class="picker-head">
-        <text class="picker-title">音 1</text>
-        <text class="picker-current">{{result.note1}}</text>
-      </view>
-      <view class="chip-row">
-        <view
-          wx:for="{{letters}}"
-          wx:key="*this"
-          class="letter-chip {{note1.letter === index ? 'active' : ''}}"
-          data-index="{{index}}"
-          bind:tap="onLetter1"
-        >
-          <text class="chip-text">{{item}}</text>
-        </view>
-      </view>
-      <view class="chip-row small">
-        <view
-          wx:for="{{accOptions}}"
-          wx:key="value"
-          class="acc-chip {{note1.acc === item.value ? 'active' : ''}}"
-          data-acc="{{item.value}}"
-          bind:tap="onAcc1"
-        >
-          <text class="chip-text">{{item.label}}</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 音 2 -->
-    <view class="picker-card">
-      <view class="picker-head">
-        <text class="picker-title">音 2</text>
-        <text class="picker-current">{{result.note2}}</text>
-      </view>
-      <view class="chip-row">
-        <view
-          wx:for="{{letters}}"
-          wx:key="*this"
-          class="letter-chip {{note2.letter === index ? 'active' : ''}}"
-          data-index="{{index}}"
-          bind:tap="onLetter2"
-        >
-          <text class="chip-text">{{item}}</text>
-        </view>
-      </view>
-      <view class="chip-row small">
-        <view
-          wx:for="{{accOptions}}"
-          wx:key="value"
-          class="acc-chip {{note2.acc === item.value ? 'active' : ''}}"
-          data-acc="{{item.value}}"
-          bind:tap="onAcc2"
-        >
-          <text class="chip-text">{{item.label}}</text>
-        </view>
-      </view>
-    </view>
-
-    <!-- 参考表 -->
-    <view class="ref-card">
-      <text class="ref-title">半音与常见音程</text>
-      <view class="ref-row" wx:for="{{refList}}" wx:key="semi">
-        <text class="ref-sem">{{item.semi}}</text>
-        <text class="ref-name">{{item.name}}</text>
-      </view>
-    </view>
-
-    <view class="note-tip">
-      <text>按字母级数计算音程，因此增四度与减五度会得到不同名称</text>
-    </view>
-
-    <view class="bottom-safe"></view>
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="音程计算" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
   </view>
-</scroll-view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <!-- 结果卡片 -->
+      <view class="result-card">
+        <text class="result-formula">{{result.note1}} → {{result.note2}}</text>
+        <text class="result-name">{{result.name}}</text>
+
+        <view class="meta-row">
+          <view class="meta-item">
+            <text class="meta-value">{{result.semitones}}</text>
+            <text class="meta-label">半音</text>
+          </view>
+          <view class="meta-line"></view>
+          <view class="meta-item">
+            <text class="meta-value">{{result.wholeToneText}}</text>
+            <text class="meta-label">全音</text>
+          </view>
+          <view class="meta-line"></view>
+          <view class="meta-item">
+            <text class="meta-value meta-value-text">{{result.consonance}}</text>
+            <text class="meta-label">协和性</text>
+          </view>
+        </view>
+
+        <view class="result-foot">
+          <view class="foot-item">
+            <text class="foot-key">转位</text>
+            <text class="foot-val">{{result.inversion}}</text>
+          </view>
+          <view class="foot-item" wx:if="{{result.tip}}">
+            <text class="foot-key">提示</text>
+            <text class="foot-val">{{result.tip}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 交换 -->
+      <view class="swap-row" bind:tap="onSwap">
+        <text class="swap-icon">⇅</text>
+        <text class="swap-text">交换两音方向</text>
+      </view>
+
+      <!-- 音 1 -->
+      <view class="picker-card">
+        <view class="picker-head">
+          <text class="picker-title">音 1</text>
+          <text class="picker-current">{{result.note1}}</text>
+        </view>
+        <view class="chip-row">
+          <view
+            wx:for="{{letters}}"
+            wx:key="*this"
+            class="letter-chip {{note1.letter === index ? 'active' : ''}}"
+            data-index="{{index}}"
+            bind:tap="onLetter1"
+          >
+            <text class="chip-text">{{item}}</text>
+          </view>
+        </view>
+        <view class="chip-row small">
+          <view
+            wx:for="{{accOptions}}"
+            wx:key="value"
+            class="acc-chip {{note1.acc === item.value ? 'active' : ''}}"
+            data-acc="{{item.value}}"
+            bind:tap="onAcc1"
+          >
+            <text class="chip-text">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 音 2 -->
+      <view class="picker-card">
+        <view class="picker-head">
+          <text class="picker-title">音 2</text>
+          <text class="picker-current">{{result.note2}}</text>
+        </view>
+        <view class="chip-row">
+          <view
+            wx:for="{{letters}}"
+            wx:key="*this"
+            class="letter-chip {{note2.letter === index ? 'active' : ''}}"
+            data-index="{{index}}"
+            bind:tap="onLetter2"
+          >
+            <text class="chip-text">{{item}}</text>
+          </view>
+        </view>
+        <view class="chip-row small">
+          <view
+            wx:for="{{accOptions}}"
+            wx:key="value"
+            class="acc-chip {{note2.acc === item.value ? 'active' : ''}}"
+            data-acc="{{item.value}}"
+            bind:tap="onAcc2"
+          >
+            <text class="chip-text">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 参考表 -->
+      <view class="ref-card">
+        <text class="ref-title">半音与常见音程</text>
+        <view class="ref-row" wx:for="{{refList}}" wx:key="semi">
+          <text class="ref-sem">{{item.semi}}</text>
+          <text class="ref-name">{{item.name}}</text>
+        </view>
+      </view>
+
+      <view class="note-tip">
+        <text>按字母级数计算音程，因此增四度与减五度会得到不同名称</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

@@ -148,6 +148,30 @@ function countTools(cats: Category[]): number {
   return cats.reduce((sum, c) => sum + c.tools.length, 0)
 }
 
+/* 计算滚动区高度 = 视口高度 - 固定顶栏占用高度（含导航栏） */
+function applyScrollHeight(inst: any) {
+  const query = wx.createSelectorQuery()
+  query.select('.page-container').boundingClientRect()
+  query.select('.top-bar').boundingClientRect()
+  query.exec((res: any[]) => {
+    const container = res && res[0]
+    const topBar = res && res[1]
+    let h = 0
+    if (container && topBar) {
+      h = Math.round(container.height - (topBar.bottom - container.top))
+    }
+    if (!h || h <= 0) {
+      /* 兜底估算：导航栏 44px + 状态栏 + Hero/Tab 约 366rpx */
+      const info = wx.getSystemInfoSync()
+      const rpx = info.windowWidth / 750
+      h = Math.round(info.windowHeight - 44 - (info.statusBarHeight || 0) - 366 * rpx)
+    }
+    if (h > 0) {
+      inst.setData({ scrollHeight: h })
+    }
+  })
+}
+
 Component({
   data: {
     categories: ALL_CATEGORIES as Category[],
@@ -155,6 +179,13 @@ Component({
     activeCategory: ALL_CATEGORIES[0].id,
     activeIndex: 0,
     activeTools: ALL_CATEGORIES[0].tools as Tool[],
+    scrollHeight: 0,
+  },
+
+  lifetimes: {
+    ready() {
+      applyScrollHeight(this)
+    },
   },
 
   pageLifetimes: {

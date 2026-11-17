@@ -36,8 +36,32 @@ const ACCIDENTALS: AccidentalInfo[] = [
   { symbol: '𝄫', zh: '重降',    en: 'double flat',    deSuffix: '-eses', frWord: 'double bémol', itWord: 'doppio bemolle' },
 ]
 
+/* 计算滚动区高度 = 视口高度 - 固定顶栏占用高度（含导航栏） */
+function applyScrollHeight(inst: any) {
+  const query = wx.createSelectorQuery()
+  query.select('.page-container').boundingClientRect()
+  query.select('.top-bar').boundingClientRect()
+  query.exec((res: any[]) => {
+    const container = res && res[0]
+    const topBar = res && res[1]
+    let h = 0
+    if (container && topBar) {
+      h = Math.round(container.height - (topBar.bottom - container.top))
+    }
+    if (!h || h <= 0) {
+      /* 兜底估算：导航栏 44px + 状态栏 */
+      const info = wx.getSystemInfoSync()
+      h = Math.round(info.windowHeight - 44 - (info.statusBarHeight || 0) - 40)
+    }
+    if (h > 0) {
+      inst.setData({ scrollHeight: h })
+    }
+  })
+}
+
 Component({
   data: {
+    scrollHeight: 0,
     naturalNotes: NATURAL_NOTES,
     accidentals: ACCIDENTALS,
     columns: [
@@ -48,5 +72,11 @@ Component({
       { key: 'chineseLetter', label: '音名' },
       { key: 'chineseSolfege', label: '唱名' },
     ],
+  },
+
+  lifetimes: {
+    ready() {
+      applyScrollHeight(this)
+    },
   },
 })
