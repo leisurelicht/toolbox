@@ -77,12 +77,19 @@ function wholeToneText(semitones: number): string {
   return half === 1 ? whole + '½' : String(whole)
 }
 
+/* 查表取音程名，避免在 tsconfig strict 下对 `{}` 做索引 */
+function intervalNameOf(degree: number, semitones: number): string {
+  const row = INTERVAL_TABLE[degree]
+  if (!row) return ''
+  const name = row[semitones]
+  return name ? name : ''
+}
+
 function computeInterval(a: NoteSel, b: NoteSel): IntervalResult {
   const degree = ((b.letter - a.letter + 7) % 7) + 1
   const semitones = (pitchClass(b) - pitchClass(a) + 12) % 12
 
-  const row = INTERVAL_TABLE[degree] || {}
-  const name = row[semitones] || '不常见音程'
+  const name = intervalNameOf(degree, semitones) || '不常见音程'
 
   let consonance = '不协和'
   if (PERFECT_SET.indexOf(name) >= 0) {
@@ -92,8 +99,7 @@ function computeInterval(a: NoteSel, b: NoteSel): IntervalResult {
   }
 
   /* 转位：度数 9-n，半音数 12-m */
-  const invRow = INTERVAL_TABLE[9 - degree] || {}
-  const inversion = invRow[12 - semitones] || '—'
+  const inversion = intervalNameOf(9 - degree, 12 - semitones) || '—'
 
   let tip = ''
   if (semitones === 6) {
