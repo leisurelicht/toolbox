@@ -1,0 +1,39 @@
+<!-- 曲式结构速查 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="曲式结构" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <view class="count-line">
+        <text class="count-text">共 {{count}} 种常见曲式</text>
+      </view>
+
+      <view class="form-card" wx:for="{{forms}}" wx:key="key">
+        <view class="form-head">
+          <text class="form-name">{{item.name}}</text>
+          <text class="form-structure">{{item.structure}}</text>
+        </view>
+
+        <view class="part-row">
+          <view class="part-chip" wx:for="{{item.parts}}" wx:for-item="p" wx:key="key">
+            <text class="part-text">{{p.label}}</text>
+          </view>
+        </view>
+
+        <text class="form-desc">{{item.desc}}</text>
+
+        <view class="example-row">
+          <text class="example-key">例</text>
+          <text class="example-val">{{item.examples}}</text>
+        </view>
+      </view>
+
+      <view class="note-tip">
+        <text>曲式划分存在多种学派表述，此处采用通行的教学分类</text>
+      </view>
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

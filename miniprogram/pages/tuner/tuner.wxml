@@ -1,0 +1,60 @@
+<!-- 调音器 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="调音器" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <!-- 状态 -->
+      <view class="status-line">
+        <view class="status-dot {{running ? 'on' : ''}}"></view>
+        <text class="status-text">{{statusText}}</text>
+      </view>
+
+      <!-- 音高显示 -->
+      <view class="tuner-card">
+        <text class="tuner-note">{{note}}</text>
+        <view class="tuner-cents">
+          <text class="cents-value {{centsClass}}">{{centsText}}</text>
+          <text class="cents-unit">音分</text>
+          <text class="cents-hint">{{hint}}</text>
+        </view>
+
+        <!-- 刻度条 -->
+        <view class="bar-track">
+          <view class="bar-center"></view>
+          <view class="bar-needle" style="left: {{barLeft}}%;"></view>
+        </view>
+        <view class="bar-labels">
+          <text class="bar-label">−50</text>
+          <text class="bar-label">0</text>
+          <text class="bar-label">+50</text>
+        </view>
+
+        <view class="info-row">
+          <view class="info-item">
+            <text class="info-key">当前频率</text>
+            <text class="info-val">{{freqText}} Hz</text>
+          </view>
+          <view class="info-line"></view>
+          <view class="info-item">
+            <text class="info-key">标准频率</text>
+            <text class="info-val">{{standard}} Hz</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 控制 -->
+      <view class="action-btn {{running ? 'running' : ''}}" bind:tap="onToggle">
+        <text class="action-text">{{running ? '停止' : '开始调音'}}</text>
+      </view>
+
+      <view class="note-tip">
+        <text>调音器通过麦克风识别单音音高，适合弦乐、管乐与人声定音；环境嘈杂或多音同时发声时可能识别不准。识别基于自相关算法，延迟约 0.1 秒</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

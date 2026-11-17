@@ -1,0 +1,48 @@
+<!-- 拍号与节奏型速查 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="拍号速查" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+    <view class="settings">
+      <view class="cat-grid">
+        <view wx:for="{{cats}}" wx:key="*this" class="cat-cell" data-cat="{{item}}" bind:tap="onCat">
+          <text class="cat-text {{activeCat === item ? 'active' : ''}}">{{item}}</text>
+        </view>
+      </view>
+      <view class="count-line">
+        <text class="count-text">共 {{count}} 种拍号</text>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <view class="sig-card" wx:for="{{visible}}" wx:key="key">
+        <view class="sig-head">
+          <view class="sig-badge">
+            <text class="sig-label">{{item.label}}</text>
+          </view>
+          <view class="sig-title">
+            <text class="sig-name">{{item.name}}</text>
+            <text class="sig-group">{{item.group}}</text>
+          </view>
+        </view>
+
+        <view class="pulse-row">
+          <view class="pulse-dot {{p.cls}}" wx:for="{{item.pulses}}" wx:for-item="p" wx:key="key"></view>
+        </view>
+        <text class="feel-text">{{item.feelText}}</text>
+
+        <view class="info-row">
+          <text class="info-key">常见</text>
+          <text class="info-val">{{item.genres}}</text>
+        </view>
+        <text class="sig-desc">{{item.desc}}</text>
+      </view>
+
+      <view class="note-tip">
+        <text>圆点大小表示重音层级：大圆为强拍、中圆为次强拍、小圆为弱拍</text>
+      </view>
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

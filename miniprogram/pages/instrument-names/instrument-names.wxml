@@ -1,0 +1,50 @@
+<!-- 乐器名称多语种对照 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="乐器名称" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+    <view class="settings">
+      <view class="cat-grid">
+        <view wx:for="{{cats}}" wx:key="*this" class="cat-cell" data-cat="{{item}}" bind:tap="onCat">
+          <text class="cat-text {{activeCat === item ? 'active' : ''}}">{{item}}</text>
+        </view>
+      </view>
+      <view class="count-line">
+        <text class="count-text">共 {{count}} 种乐器</text>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <view class="inst-card" wx:for="{{visible}}" wx:key="key">
+        <view class="inst-head">
+          <text class="inst-zh">{{item.zh}}</text>
+          <view class="abbr-badge">
+            <text class="abbr-text">{{item.abbr}}</text>
+          </view>
+        </view>
+        <view class="lang-row">
+          <text class="lang-key">意</text>
+          <text class="lang-val">{{item.it}}</text>
+        </view>
+        <view class="lang-row">
+          <text class="lang-key">德</text>
+          <text class="lang-val">{{item.de}}</text>
+        </view>
+        <view class="lang-row">
+          <text class="lang-key">法</text>
+          <text class="lang-val">{{item.fr}}</text>
+        </view>
+        <view class="lang-row">
+          <text class="lang-key">英</text>
+          <text class="lang-val">{{item.en}}</text>
+        </view>
+      </view>
+
+      <view class="note-tip">
+        <text>缩写为总谱中常见的乐器简称，不同出版社写法略有差异</text>
+      </view>
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

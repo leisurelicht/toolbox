@@ -1,0 +1,75 @@
+<!-- 和弦听辨 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="和弦听辨" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+
+    <view class="settings">
+      <view class="chip-row">
+        <view
+          wx:for="{{levels}}"
+          wx:key="label"
+          class="opt-chip {{levelIndex === index ? 'active' : ''}}"
+          data-index="{{index}}"
+          bind:tap="onLevel"
+        >
+          <text class="opt-text">{{item.label}}</text>
+        </view>
+      </view>
+
+      <view class="chip-row">
+        <view class="opt-chip {{mode === 'block' ? 'active' : ''}}" data-mode="block" bind:tap="onMode">
+          <text class="opt-text">柱式和弦</text>
+        </view>
+        <view class="opt-chip {{mode === 'arp' ? 'active' : ''}}" data-mode="arp" bind:tap="onMode">
+          <text class="opt-text">分解和弦</text>
+        </view>
+      </view>
+
+      <view class="stat-row">
+        <text class="stat-item">第 {{questionNo}} 题</text>
+        <text class="stat-item">答对 {{right}} / {{total}}</text>
+        <text class="stat-item">连对 {{streak}}</text>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <view class="play-card" bind:tap="onPlay">
+        <text class="play-icon">♫</text>
+        <text class="play-title">{{answered ? '重听本题' : '播放和弦'}}</text>
+        <text class="play-sub">{{mode === 'block' ? '同时奏响' : '依次奏响'}}</text>
+      </view>
+
+      <view wx:if="{{answered}}" class="result {{resultOk ? 'ok' : 'bad'}}">
+        <text class="result-text">{{resultText}}</text>
+      </view>
+
+      <view class="answer-grid">
+        <view
+          wx:for="{{options}}"
+          wx:key="id"
+          class="answer-cell"
+          data-index="{{index}}"
+          bind:tap="onOption"
+        >
+          <text class="answer-text {{answered && index === correctIndex ? 'correct' : ''}} {{answered && index === chosenIndex && index !== correctIndex ? 'wrong' : ''}}">{{item.name}}</text>
+        </view>
+      </view>
+
+      <view class="next-row" wx:if="{{answered}}" bind:tap="onNext">
+        <text class="next-text">下一题</text>
+      </view>
+
+      <view class="reset-row" bind:tap="onReset">
+        <text class="reset-text">重置成绩</text>
+      </view>
+
+      <view class="note-tip">
+        <text>和弦以 C3–E♭5 范围内的随机根音奏出；柱式更接近实际和声听辨，分解更容易分辨各音</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

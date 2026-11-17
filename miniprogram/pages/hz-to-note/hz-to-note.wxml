@@ -1,0 +1,61 @@
+<!-- 频率 → 音名反查 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="音高反查" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <!-- 输入 -->
+      <view class="input-card">
+        <text class="input-label">输入频率（Hz）</text>
+        <input
+          class="freq-input"
+          type="digit"
+          value="{{freqText}}"
+          placeholder="例如 440"
+          placeholder-class="freq-ph"
+          bindinput="onInput"
+        />
+        <view class="quick-row">
+          <view class="quick-chip" wx:for="{{quick}}" wx:key="key" data-value="{{item.value}}" bind:tap="onQuick">
+            <text class="quick-text">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 结果 -->
+      <view class="result-card">
+        <text class="result-label">最接近的音</text>
+        <text class="result-note">{{result.note}}</text>
+
+        <view class="cents-row">
+          <text class="cents-value {{result.centsClass}}">{{result.centsText}}</text>
+          <text class="cents-unit">音分</text>
+          <text class="cents-hint">{{result.hint}}</text>
+        </view>
+
+        <view class="bar-track">
+          <view class="bar-center"></view>
+          <view class="bar-needle" style="left: {{result.barLeft}}%;"></view>
+        </view>
+        <view class="bar-labels">
+          <text class="bar-label">−50</text>
+          <text class="bar-label">0</text>
+          <text class="bar-label">+50</text>
+        </view>
+
+        <view class="std-row">
+          <text class="std-key">该音标准频率</text>
+          <text class="std-val">{{result.standard}} Hz</text>
+        </view>
+      </view>
+
+      <view class="note-tip">
+        <text>以 A4 = 440 Hz 为基准，十二平均律换算；音分偏差为相对最近十二平均律音的差值</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

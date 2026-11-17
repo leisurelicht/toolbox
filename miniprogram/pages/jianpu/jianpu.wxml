@@ -1,0 +1,62 @@
+<!-- 简谱 ⇄ 音名 / 唱名 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="简谱对照" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+    <view class="settings">
+      <view class="key-grid">
+        <view wx:for="{{keys}}" wx:key="label" class="key-cell" data-index="{{index}}" bind:tap="onKey">
+          <text class="key-text {{keyIndex === index ? 'active' : ''}}">{{item.label}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <!-- 对照表 -->
+      <view class="table-card">
+        <view class="th-row">
+          <text class="th th-num">简谱</text>
+          <text class="th th-note">音名</text>
+          <text class="th th-mov">首调</text>
+          <text class="th th-fix">固定</text>
+        </view>
+        <view class="td-row" wx:for="{{rows}}" wx:key="num">
+          <text class="td td-num">{{item.num}}</text>
+          <text class="td td-note">{{item.note}}</text>
+          <text class="td td-mov">{{item.movable}}</text>
+          <text class="td td-fix">{{item.fixed}}</text>
+        </view>
+      </view>
+
+      <!-- 简谱输入 -->
+      <view class="conv-card">
+        <view class="conv-head">
+          <text class="conv-title">简谱 → 音名</text>
+          <text class="conv-count">{{parsedCount}} 个音</text>
+        </view>
+        <input
+          class="conv-input"
+          value="{{inputText}}"
+          placeholder="输入 1–7 数字，0 表示休止"
+          placeholder-class="conv-ph"
+          bindinput="onInput"
+        />
+        <view class="parsed-row">
+          <view class="parsed-chip" wx:for="{{parsed}}" wx:for-item="p" wx:key="key">
+            <text class="parsed-text">{{p.name}}</text>
+          </view>
+        </view>
+        <view class="clear-row" bind:tap="onClear">
+          <text class="clear-text">清空</text>
+        </view>
+      </view>
+
+      <view class="note-tip">
+        <text>首调唱名随调号移动（1 = do）；固定唱名以 C 为 do。高音点、增时线等记谱细节本工具未处理</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>
