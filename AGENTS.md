@@ -21,23 +21,32 @@
 | 日常 | 算账 | `pages/bill-calc/bill-calc` |
 | 日常 | 单位换算 | `pages/unit-convert/unit-convert` |
 | 日常 | 旅行打包 | `pages/packing-list/packing-list` |
+| 日常 | 分贝仪 | `pages/decibel-meter/decibel-meter` |
 | 日常 | 涨了吗 | `pages/fund-premium/fund-premium` |
 | 音乐 | 节拍器 | `pages/metronome/metronome` |
+| 音乐 | 调音器 | `pages/tuner/tuner` |
 | 音乐 | 练耳训练 | `pages/ear-training/ear-training` |
+| 音乐 | 和弦听辨 | `pages/chord-ear/chord-ear` |
 | 音乐 | 调号速查 | `pages/key-signature/key-signature` |
 | 音乐 | 音名对照 | `pages/note-names/note-names` |
 | 音乐 | 频率对照 | `pages/pitch-frequency/pitch-frequency` |
 | 音乐 | 音程计算 | `pages/interval-calculator/interval-calculator` |
 | 音乐 | 术语词典 | `pages/music-terms/music-terms` |
 | 音乐 | 装饰音记号 | `pages/ornaments/ornaments` |
+| 音乐 | 拍号速查 | `pages/time-signatures/time-signatures` |
 | 音乐 | 调式音阶 | `pages/modes-scales/modes-scales` |
+| 音乐 | 曲式结构 | `pages/forms/forms` |
 | 音乐 | 移调 | `pages/transpose/transpose` |
+| 音乐 | 简谱对照 | `pages/jianpu/jianpu` |
 | 音乐 | 和弦反查 | `pages/chord-finder/chord-finder` |
+| 音乐 | 和弦进行 | `pages/chord-progressions/chord-progressions` |
 | 音乐 | 五度圈 | `pages/circle-of-fifths/circle-of-fifths` |
 | 音乐 | 音分律制 | `pages/tuning-cents/tuning-cents` |
+| 音乐 | 音高反查 | `pages/hz-to-note/hz-to-note` |
 | 音乐 | 谱号音位 | `pages/clefs/clefs` |
 | 音乐 | 速度对照 | `pages/tempo-marks/tempo-marks` |
 | 音乐 | 时值计算 | `pages/rhythm-calculator/rhythm-calculator` |
+| 音乐 | 乐器名称 | `pages/instrument-names/instrument-names` |
 | 音乐 | 乐器音域 | `pages/instrument-range/instrument-range` |
 | 音乐 | 音乐史年表 | `pages/music-history/music-history` |
 
@@ -92,6 +101,7 @@
         ├── bill-calc/           # 算账
         ├── unit-convert/        # 单位换算
         ├── packing-list/        # 旅行打包
+        ├── decibel-meter/       # 分贝仪
         ├── key-signature/       # 调号速查
         ├── note-names/          # 音名对照
         ├── pitch-frequency/     # 频率对照
@@ -303,6 +313,10 @@ function applyScrollHeight(inst: any) {
 1. **类型声明是内置的旧版本** —— `typings/types/wx/` 来自 `miniprogram-api-typings` 2.8.x，里面**没有** `wx.getWindowInfo()` / `wx.getDeviceInfo()`（已核实）。统一用 `wx.getSystemInfoSync()`（取 `windowHeight` / `windowWidth` / `statusBarHeight`）。**不要**为了一个 API 去升级 typings 或 `npm install`。
 2. **`dataset` 取出的值一律是字符串** —— 与数字比较或参与计算前必须 `Number()`，否则 `'3' === 3` 恒为 false，表现为「点击无反应」。参考 `onToggleOctave`。
 3. **`Component` 的 `lifetimes` 里 `this` 类型推断可能拿不到 `methods`** —— 需要复用的测量逻辑写成**模块级函数**，签名 `function xxx(inst: any)`，在 `ready()` 里 `xxx(this)` 调用，避免 `this.measureXxx()` 的类型报错。
+4. **音频能力分三种实现，别混用** ——
+   - 节拍器：`InnerAudioContext` + 本地 wav（`assets/click*.wav`），需 `(ctx as any).obeyMuteSwitch = false`；
+   - 练耳 / 和弦听辨：`wx.createWebAudioContext()` 实时合成（旧 typings 无此类型，用 `(wx as any)` 取），适合任意音高；
+   - 调音器：`getRecorderManager()` + `format: 'PCM'` + `onFrameRecorded`，JS 内做自相关测频，**必须真机验证**（开发者工具可能不出帧）。
 
 ### 5.5 快速排查顺序
 
