@@ -1,0 +1,78 @@
+<!-- 练耳训练 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="练耳训练" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+
+    <view class="settings">
+      <view class="chip-row">
+        <view
+          wx:for="{{levels}}"
+          wx:key="label"
+          class="opt-chip {{levelIndex === index ? 'active' : ''}}"
+          data-index="{{index}}"
+          bind:tap="onLevel"
+        >
+          <text class="opt-text">{{item.label}}</text>
+        </view>
+      </view>
+
+      <view class="chip-row">
+        <view class="opt-chip {{mode === 'melody' ? 'active' : ''}}" data-mode="melody" bind:tap="onMode">
+          <text class="opt-text">旋律音程</text>
+        </view>
+        <view class="opt-chip {{mode === 'harmony' ? 'active' : ''}}" data-mode="harmony" bind:tap="onMode">
+          <text class="opt-text">和声音程</text>
+        </view>
+      </view>
+
+      <view class="stat-row">
+        <text class="stat-item">第 {{questionNo}} 题</text>
+        <text class="stat-item">答对 {{right}} / {{total}}</text>
+        <text class="stat-item">连对 {{streak}}</text>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <!-- 播放 -->
+      <view class="play-card" bind:tap="onPlay">
+        <text class="play-icon">♪</text>
+        <text class="play-title">{{answered ? '重听本题' : '播放题目'}}</text>
+        <text class="play-sub">{{mode === 'harmony' ? '两音同时播放' : '先低音、后高音'}}</text>
+      </view>
+
+      <!-- 判定结果 -->
+      <view wx:if="{{answered}}" class="result {{resultOk ? 'ok' : 'bad'}}">
+        <text class="result-text">{{resultText}}</text>
+      </view>
+
+      <!-- 答案 -->
+      <view class="answer-grid">
+        <view
+          wx:for="{{options}}"
+          wx:key="name"
+          class="answer-cell"
+          data-index="{{index}}"
+          bind:tap="onOption"
+        >
+          <text class="answer-text {{answered && index === correctIndex ? 'correct' : ''}} {{answered && index === chosenIndex && index !== correctIndex ? 'wrong' : ''}}">{{item.name}}</text>
+        </view>
+      </view>
+
+      <view class="next-row" wx:if="{{answered}}" bind:tap="onNext">
+        <text class="next-text">下一题</text>
+      </view>
+
+      <view class="reset-row" bind:tap="onReset">
+        <text class="reset-text">重置成绩</text>
+      </view>
+
+      <view class="note-tip">
+        <text>{{mode === 'harmony' ? '和声音程：两音同时发声，更接近实际听辨和声的场景' : '旋律音程：两音先后发声，便于判断音程距离'}}</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

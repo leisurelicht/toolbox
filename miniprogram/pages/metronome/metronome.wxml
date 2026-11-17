@@ -1,0 +1,89 @@
+<!-- 节拍器 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="节拍器" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <!-- BPM 显示 -->
+      <view class="bpm-card">
+        <view class="bpm-display">
+          <text class="bpm-value">{{bpm}}</text>
+          <text class="bpm-unit">BPM</text>
+        </view>
+
+        <!-- 拍点 -->
+        <view class="beat-row">
+          <view
+            wx:for="{{dots}}"
+            wx:key="*this"
+            class="dot {{index === beatIndex ? 'on' : ''}} {{index === 0 ? 'accent' : ''}}"
+          ></view>
+        </view>
+        <text class="beat-text">{{beatText}}</text>
+
+        <!-- 加减 -->
+        <view class="step-row">
+          <view class="step-btn" data-delta="-5" bind:tap="onStep">
+            <text class="step-text">−5</text>
+          </view>
+          <view class="step-btn" data-delta="-1" bind:tap="onStep">
+            <text class="step-text">−1</text>
+          </view>
+          <view class="step-btn" data-delta="1" bind:tap="onStep">
+            <text class="step-text">+1</text>
+          </view>
+          <view class="step-btn" data-delta="5" bind:tap="onStep">
+            <text class="step-text">+5</text>
+          </view>
+        </view>
+
+        <!-- 预设 -->
+        <view class="preset-row">
+          <view
+            wx:for="{{presets}}"
+            wx:key="*this"
+            class="preset-chip {{bpm === item ? 'active' : ''}}"
+            data-bpm="{{item}}"
+            bind:tap="onPreset"
+          >
+            <text class="preset-text">{{item}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 拍号 -->
+      <view class="bar-card">
+        <text class="bar-label">每小节拍数</text>
+        <view class="bar-options">
+          <view
+            wx:for="{{barOptions}}"
+            wx:key="label"
+            class="bar-chip {{beats === item.beats ? 'active' : ''}}"
+            data-beats="{{item.beats}}"
+            bind:tap="onBeats"
+          >
+            <text class="bar-chip-text">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 控制 -->
+      <view class="action-row">
+        <view class="start-btn {{running ? 'running' : ''}}" bind:tap="onStartStop">
+          <text class="start-text">{{running ? '停止' : '开始'}}</text>
+        </view>
+        <view class="tap-btn" bind:tap="onTap">
+          <text class="tap-text">Tap 定速</text>
+        </view>
+      </view>
+
+      <view class="note-tip">
+        <text>每小节第一拍为高音重拍；「Tap 定速」连续点击 2 次以上即可测出速度</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

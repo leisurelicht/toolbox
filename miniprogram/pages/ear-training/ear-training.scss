@@ -1,0 +1,284 @@
+/* ========================================
+   练耳训练
+   滚动模式 C：顶部固定 + 内容滚动
+   ======================================== */
+
+page {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 铺满视口的固定容器，自身不滚动 */
+.page-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: #FBFBFD;
+  overflow: hidden;
+}
+
+/* 固定顶栏（导航栏 + 设置） */
+.top-bar {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 滚动区：高度由 JS 注入 */
+.scroll-body {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.content {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8rpx 32rpx 0;
+}
+
+/* 固定设置区 */
+.settings {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16rpx 32rpx 0;
+}
+
+.chip-row {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10rpx;
+}
+
+.opt-chip {
+  flex: 1;
+  min-width: 0;
+  height: 66rpx;
+  margin-right: 10rpx;
+  border-radius: 16rpx;
+  background: #FFF;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.opt-chip:last-child {
+  margin-right: 0;
+}
+
+.opt-chip.active {
+  background: #BE123C;
+  border: 1rpx solid #BE123C;
+}
+
+.opt-chip:active {
+  opacity: 0.8;
+}
+
+.opt-text {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #6B7280;
+}
+
+.opt-chip.active .opt-text {
+  color: #FFF;
+}
+
+.stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6rpx 4rpx 12rpx;
+}
+
+.stat-item {
+  font-size: 20rpx;
+  color: #B0B5C0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ===== 播放卡片 ===== */
+.play-card {
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFF1F2;
+  border-radius: 24rpx;
+  padding: 32rpx 28rpx;
+  border: 1rpx solid #FECDD3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+.play-card:active {
+  opacity: 0.85;
+}
+
+.play-icon {
+  font-size: 52rpx;
+  color: #BE123C;
+  line-height: 1;
+}
+
+.play-title {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #BE123C;
+}
+
+.play-sub {
+  display: block;
+  margin-top: 6rpx;
+  font-size: 20rpx;
+  color: #E1929E;
+}
+
+/* ===== 结果 ===== */
+.result {
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  margin-top: 16rpx;
+  overflow: hidden;
+}
+
+.result.ok {
+  background: #F0FDF4;
+  border: 1rpx solid #BBF7D0;
+}
+
+.result.bad {
+  background: #FFF7ED;
+  border: 1rpx solid #FED7AA;
+}
+
+.result-text {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #15803D;
+}
+
+.result.bad .result-text {
+  color: #B45309;
+}
+
+/* ===== 答案 ===== */
+.answer-grid {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 16rpx;
+}
+
+.answer-cell {
+  width: 33.33%;
+  box-sizing: border-box;
+  padding: 6rpx;
+}
+
+.answer-text {
+  display: block;
+  height: 88rpx;
+  line-height: 88rpx;
+  text-align: center;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #4B5563;
+  background: #FFF;
+  border-radius: 16rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.answer-cell:active .answer-text {
+  background: #F5F6FA;
+}
+
+.answer-text.correct {
+  color: #FFF;
+  background: #16A34A;
+  border: 1rpx solid #16A34A;
+}
+
+.answer-text.wrong {
+  color: #FFF;
+  background: #DC2626;
+  border: 1rpx solid #DC2626;
+}
+
+/* ===== 操作 ===== */
+.next-row {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 16rpx;
+  height: 96rpx;
+  border-radius: 24rpx;
+  background: #4C6EF5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.next-row:active {
+  opacity: 0.85;
+}
+
+.next-text {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #FFF;
+  letter-spacing: 2rpx;
+}
+
+.reset-row {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 12rpx;
+  height: 72rpx;
+  border-radius: 20rpx;
+  background: #FFF;
+  border: 1rpx solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reset-row:active {
+  background: #F5F6FA;
+}
+
+.reset-text {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #9CA3AF;
+}
+
+.note-tip {
+  padding: 20rpx 8rpx 0;
+}
+
+.note-tip text {
+  font-size: 22rpx;
+  color: #B0B5C0;
+  line-height: 1.6;
+}
+
+.bottom-safe {
+  height: 60rpx;
+}

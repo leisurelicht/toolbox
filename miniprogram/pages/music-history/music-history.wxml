@@ -1,0 +1,51 @@
+<!-- 音乐史年表 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="音乐史年表" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+    <view class="settings">
+      <view class="region-row">
+        <view
+          wx:for="{{regions}}"
+          wx:key="id"
+          class="region-chip {{activeRegion === item.id ? 'active' : ''}}"
+          data-region="{{item.id}}"
+          bind:tap="onRegion"
+        >
+          <text class="region-text">{{item.label}}音乐</text>
+        </view>
+      </view>
+      <view class="count-line">
+        <text class="count-text">{{count}} 个时期</text>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <view class="era-card" wx:for="{{eras}}" wx:key="key">
+        <view class="era-head">
+          <text class="era-name">{{item.name}}</text>
+          <text class="era-range">{{item.era}}</text>
+        </view>
+
+        <view class="kw-row">
+          <text class="kw-label">关键词</text>
+          <text class="kw-text">{{item.keywordsText}}</text>
+        </view>
+
+        <view class="fig-row">
+          <text class="fig-label">代表</text>
+          <text class="fig-text">{{item.figures}}</text>
+        </view>
+
+        <text class="era-desc">{{item.desc}}</text>
+      </view>
+
+      <view class="note-tip">
+        <text>年代为通行的历史分期，学界对边界存在不同说法；中国部分按朝代与音乐形态变化划分</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

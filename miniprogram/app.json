@@ -22,8 +22,12 @@
     "pages/tempo-marks/tempo-marks",
     "pages/rhythm-calculator/rhythm-calculator",
     "pages/instrument-range/instrument-range",
+    "pages/metronome/metronome",
     "pages/fund-premium/fund-premium",
     "pages/fund-detail/fund-detail",
+    "pages/ear-training/ear-training",
+    "pages/ornaments/ornaments",
+    "pages/music-history/music-history",
     "pages/mine/mine",
     "pages/logs/logs"
   ],

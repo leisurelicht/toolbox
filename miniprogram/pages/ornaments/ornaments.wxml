@@ -1,0 +1,45 @@
+<!-- 装饰音与演奏记号速查 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="装饰音记号" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+    <view class="settings">
+      <view class="cat-grid">
+        <view
+          wx:for="{{cats}}"
+          wx:key="*this"
+          class="cat-cell"
+          data-cat="{{item}}"
+          bind:tap="onCat"
+        >
+          <text class="cat-text {{activeCat === item ? 'active' : ''}}">{{item}}</text>
+        </view>
+      </view>
+      <view class="count-line">
+        <text class="count-text">共 {{count}} 条记号</text>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <view class="orn-card" wx:for="{{visible}}" wx:key="key">
+        <view class="orn-symbol">
+          <text class="orn-symbol-text">{{item.symbol}}</text>
+        </view>
+        <view class="orn-body">
+          <view class="orn-head">
+            <text class="orn-name">{{item.name}}</text>
+            <text class="orn-en">{{item.en}}</text>
+          </view>
+          <text class="orn-desc">{{item.desc}}</text>
+        </view>
+      </view>
+
+      <view class="note-tip">
+        <text>记号形状以常见排版近似表示，实际乐谱中的写法可能略有差异</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>
