@@ -5,11 +5,6 @@
   <!-- 固定区：Hero + 分类 Tab -->
   <view class="top-bar">
     <view class="hero">
-      <view class="hero-badge">
-        <view class="badge-dot"></view>
-        <text>轻量工具箱</text>
-      </view>
-      <view class="hero-title">随手实用</view>
       <view class="hero-sub">精选 {{totalCount}} 个工具，保持简单高效</view>
     </view>
 
@@ -30,6 +25,19 @@
         style="width: {{100 / categories.length}}%; transform: translateX({{activeIndex * 100}}%);"
       >
         <view class="tab-indicator-inner"></view>
+      </view>
+    </view>
+
+    <!-- 二级分类（仅音乐类） -->
+    <view wx:if="{{hasSub}}" class="sub-bar">
+      <view
+        wx:for="{{subcats}}"
+        wx:key="id"
+        class="sub-chip {{activeSub === item.id ? 'active' : ''}}"
+        data-sub="{{item.id}}"
+        bind:tap="onSubChange"
+      >
+        <text class="sub-text">{{item.name}}</text>
       </view>
     </view>
   </view>

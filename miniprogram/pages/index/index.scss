@@ -46,44 +46,15 @@ page {
 
 /* ---- Hero ---- */
 .hero {
-  padding: 56rpx 40rpx 36rpx;
-}
-
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 6rpx 20rpx;
-  border-radius: 20rpx;
-  background: #EEF2FF;
-  margin-bottom: 20rpx;
-}
-
-.badge-dot {
-  width: 10rpx;
-  height: 10rpx;
-  border-radius: 50%;
-  background: #4C6EF5;
-  margin-right: 10rpx;
-}
-
-.hero-badge text {
-  font-size: 22rpx;
-  font-weight: 600;
-  color: #4C6EF5;
-}
-
-.hero-title {
-  font-size: 52rpx;
-  font-weight: 800;
-  color: #1E1E2E;
-  line-height: 1.2;
-  letter-spacing: 1rpx;
+  padding: 32rpx 40rpx 24rpx;
 }
 
 .hero-sub {
+  width: 100%;
+  box-sizing: border-box;
   font-size: 26rpx;
   color: #9CA3AF;
-  margin-top: 12rpx;
+  text-align: center;
 }
 
 /* ---- Tab 切换栏 ---- */
@@ -138,6 +109,52 @@ page {
   height: 4rpx;
   border-radius: 2rpx;
   background: #1E1E2E;
+}
+
+/* ---- 二级分类 ---- */
+.sub-bar {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16rpx 32rpx 4rpx;
+}
+
+.sub-chip {
+  flex: 1;
+  min-width: 0;
+  height: 58rpx;
+  margin-right: 8rpx;
+  border-radius: 14rpx;
+  background: #F0F1F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.sub-chip:last-child {
+  margin-right: 0;
+}
+
+.sub-chip.active {
+  background: #1E1E2E;
+}
+
+.sub-chip:active {
+  opacity: 0.75;
+}
+
+.sub-text {
+  font-size: 21rpx;
+  font-weight: 600;
+  color: #6B7280;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sub-chip.active .sub-text {
+  color: #FFF;
 }
 
 /* ---- 工具列表 ---- */
