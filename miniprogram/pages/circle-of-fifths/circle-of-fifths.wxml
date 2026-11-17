@@ -1,0 +1,78 @@
+<!-- 五度圈 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="五度圈" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+    <view class="settings">
+      <!-- 圆环 -->
+      <view class="ring" style="height: {{ringSize}}rpx;">
+        <!-- 内圈：关系小调 -->
+        <view
+          wx:for="{{minors}}"
+          wx:key="label"
+          class="minor-node {{activeIndex === item.index ? 'active' : ''}}"
+          style="left: {{item.left}}rpx; top: {{item.top}}rpx; width: {{minorSize}}rpx; height: {{minorSize}}rpx;"
+          data-index="{{item.index}}"
+          bind:tap="onSelect"
+        >
+          <text class="minor-text">{{item.label}}</text>
+        </view>
+
+        <!-- 外圈：大调 -->
+        <view
+          wx:for="{{majors}}"
+          wx:key="label"
+          class="major-node {{activeIndex === item.index ? 'active' : ''}}"
+          style="left: {{item.left}}rpx; top: {{item.top}}rpx; width: {{majorSize}}rpx; height: {{majorSize}}rpx;"
+          data-index="{{item.index}}"
+          bind:tap="onSelect"
+        >
+          <text class="major-text">{{item.label}}</text>
+        </view>
+
+        <!-- 中心 -->
+        <view class="ring-center">
+          <text class="center-key">{{current.major}}</text>
+          <text class="center-acc">{{current.acc}}</text>
+          <text class="center-minor">{{current.minor}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <!-- 当前调详情 -->
+      <view class="detail-card">
+        <view class="detail-head">
+          <text class="detail-name">{{current.major}} 大调</text>
+          <view class="detail-badge">
+            <text class="detail-badge-text">{{current.signature}}</text>
+          </view>
+        </view>
+
+        <view class="detail-row">
+          <text class="detail-key">关系小调</text>
+          <text class="detail-val">{{current.minor}}</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-key">属调（上五度）</text>
+          <text class="detail-val">{{dominant}} 大调</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-key">下属调（上四度）</text>
+          <text class="detail-val">{{subdominant}} 大调</text>
+        </view>
+        <view class="detail-row">
+          <text class="detail-key">主三和弦</text>
+          <text class="detail-val">{{current.major}} / {{current.minor}}</text>
+        </view>
+      </view>
+
+      <view class="note-tip">
+        <text>顺时针相邻为上行五度，逆时针相邻为上行四度；相邻两调只差一个升降号</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

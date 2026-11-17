@@ -1,0 +1,46 @@
+<!-- 速度术语 → BPM -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="速度对照" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <view class="legend">
+        <text class="legend-text">常用速度术语与每分钟拍数（BPM）区间</text>
+      </view>
+
+      <!-- 速度卡片 -->
+      <view class="mark-card" wx:for="{{marks}}" wx:key="term">
+        <view class="mark-head">
+          <text class="mark-term">{{item.term}}</text>
+          <text class="mark-bpm">{{item.rangeText}}</text>
+        </view>
+        <text class="mark-zh">{{item.zh}}</text>
+        <view class="bar-track">
+          <view class="bar-fill" style="margin-left: {{item.leftPct}}%; width: {{item.widthPct}}%;"></view>
+        </view>
+      </view>
+
+      <!-- 坐标轴 -->
+      <view class="axis-row">
+        <text class="axis-text" wx:for="{{axis}}" wx:key="*this">{{item}}</text>
+      </view>
+
+      <!-- 修饰词 -->
+      <view class="section-title">速度修饰词</view>
+      <view class="mod-card">
+        <view class="mod-row" wx:for="{{modifiers}}" wx:key="term">
+          <text class="mod-term">{{item.term}}</text>
+          <text class="mod-zh">{{item.zh}}</text>
+        </view>
+      </view>
+
+      <view class="note-tip">
+        <text>数值为常见范围，不同时期与版本略有差异；历史演奏实践中，同一术语在 18–19 世纪的实际速度常低于现代习惯</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

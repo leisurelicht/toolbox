@@ -1,0 +1,89 @@
+<!-- 音分 · 律制对照 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="音分律制" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+    <view class="settings">
+      <!-- 音分计算器 -->
+      <view class="calc-card">
+        <view class="calc-head">
+          <text class="calc-title">音分计算</text>
+          <text class="calc-sub">输入两个频率（Hz）</text>
+        </view>
+
+        <view class="input-row">
+          <view class="input-box">
+            <text class="input-label">频率 1</text>
+            <input
+              class="input-field"
+              type="digit"
+              value="{{freq1}}"
+              data-which="1"
+              bindinput="onFreqInput"
+              placeholder="Hz"
+            />
+          </view>
+          <text class="input-arrow">→</text>
+          <view class="input-box">
+            <text class="input-label">频率 2</text>
+            <input
+              class="input-field"
+              type="digit"
+              value="{{freq2}}"
+              data-which="2"
+              bindinput="onFreqInput"
+              placeholder="Hz"
+            />
+          </view>
+        </view>
+
+        <view wx:if="{{result.valid}}" class="calc-result">
+          <view class="result-main">
+            <text class="result-cents {{result.centsClass}}">{{result.cents}}</text>
+            <text class="result-unit">音分</text>
+          </view>
+          <view class="result-sub">
+            <text class="result-sub-text">{{result.semitones}} 个半音 · 最接近「{{result.nearest}}」</text>
+          </view>
+        </view>
+
+        <view wx:else class="calc-empty">
+          <text class="calc-empty-text">请输入两个大于 0 的频率</text>
+        </view>
+      </view>
+
+      <view class="section-title">七声音级 · 三律对照（以 C 为 0 音分）</view>
+    </view>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <!-- 律制对比 -->
+      <view class="deg-card" wx:for="{{degrees}}" wx:key="name">
+        <view class="deg-head">
+          <text class="deg-name">{{item.name}}</text>
+          <text class="deg-et">平均律 {{item.et}}</text>
+        </view>
+
+        <view class="deg-line">
+          <text class="deg-label">纯律</text>
+          <text class="deg-ratio">{{item.justRatio}}</text>
+          <text class="deg-val">{{item.just}}</text>
+          <text class="deg-dev {{item.justDevClass}}">{{item.justDev}}</text>
+        </view>
+
+        <view class="deg-line">
+          <text class="deg-label">五度相生</text>
+          <text class="deg-ratio">{{item.pythRatio}}</text>
+          <text class="deg-val">{{item.pyth}}</text>
+          <text class="deg-dev {{item.pythDevClass}}">{{item.pythDev}}</text>
+        </view>
+      </view>
+
+      <view class="note-tip">
+        <text>偏差为相对十二平均律的音分差：正值偏高、负值偏低。纯律大三度偏低约 13.7 音分，五度相生律大三度偏高约 7.8 音分</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

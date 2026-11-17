@@ -1,0 +1,92 @@
+<!-- 节奏时值计算器 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="时值计算" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+    <view class="settings">
+      <!-- BPM 控制 -->
+      <view class="bpm-card">
+        <view class="bpm-display">
+          <text class="bpm-value">{{bpm}}</text>
+          <text class="bpm-unit">BPM</text>
+        </view>
+
+        <view class="step-row">
+          <view class="step-btn" data-delta="-10" bind:tap="onStep">
+            <text class="step-text">−10</text>
+          </view>
+          <view class="step-btn" data-delta="-1" bind:tap="onStep">
+            <text class="step-text">−1</text>
+          </view>
+          <view class="step-btn" data-delta="1" bind:tap="onStep">
+            <text class="step-text">+1</text>
+          </view>
+          <view class="step-btn" data-delta="10" bind:tap="onStep">
+            <text class="step-text">+10</text>
+          </view>
+        </view>
+
+        <view class="preset-row">
+          <view
+            wx:for="{{presets}}"
+            wx:key="*this"
+            class="preset-chip {{bpm === item ? 'active' : ''}}"
+            data-bpm="{{item}}"
+            bind:tap="onPreset"
+          >
+            <text class="preset-text">{{item}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 拍号 -->
+      <view class="bar-card">
+        <text class="bar-label">每小节拍数</text>
+        <view class="bar-options">
+          <view
+            wx:for="{{barOptions}}"
+            wx:key="label"
+            class="bar-chip {{barIndex === index ? 'active' : ''}}"
+            data-index="{{index}}"
+            bind:tap="onBar"
+          >
+            <text class="bar-chip-text">{{item.label}}</text>
+          </view>
+        </view>
+        <view class="bar-result">
+          <text class="bar-result-label">小节时长</text>
+          <text class="bar-result-value">{{barMs}}</text>
+        </view>
+      </view>
+
+      <!-- 表头（固定） -->
+      <view class="table-head-card">
+        <view class="table-head">
+          <text class="col col-name">音符</text>
+          <text class="col col-beats">拍数</text>
+          <text class="col col-ms">时长</text>
+          <text class="col col-hz">次/秒</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <!-- 时值行（滚动） -->
+      <view class="table-body">
+        <view class="table-row" wx:for="{{noteValues}}" wx:key="name">
+          <text class="col col-name">{{item.name}}</text>
+          <text class="col col-beats">{{item.beats}}</text>
+          <text class="col col-ms">{{item.ms}}</text>
+          <text class="col col-hz">{{item.hz}}</text>
+        </view>
+      </view>
+
+      <view class="note-tip">
+        <text>以四分音符为一拍计算；6/8 拍按八分音符为一拍、每小节 6 拍计</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

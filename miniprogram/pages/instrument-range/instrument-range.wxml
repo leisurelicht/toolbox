@@ -1,0 +1,55 @@
+<!-- 乐器音域对照 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="乐器音域" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+    <view class="settings">
+      <!-- 家族筛选 -->
+      <view class="fam-grid">
+        <view
+          wx:for="{{families}}"
+          wx:key="*this"
+          class="fam-cell"
+          data-family="{{item}}"
+          bind:tap="onFamily"
+        >
+          <text class="fam-text {{activeFamily === item ? 'active' : ''}}">{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <!-- 乐器列表 -->
+      <view class="instr-card" wx:for="{{list}}" wx:key="name">
+        <view class="instr-head">
+          <text class="instr-name">{{item.name}}</text>
+          <view class="instr-badge">
+            <text class="instr-badge-text">{{item.family}}</text>
+          </view>
+        </view>
+
+        <view class="range-line">
+          <text class="range-note">{{item.lowText}}</text>
+          <view class="bar-track">
+            <view class="bar-fill" style="margin-left: {{item.leftPct}}%; width: {{item.widthPct}}%;"></view>
+          </view>
+          <text class="range-note">{{item.highText}}</text>
+        </view>
+
+        <text class="instr-desc">{{item.desc}}</text>
+      </view>
+
+      <!-- 坐标轴 -->
+      <view class="axis-row">
+        <text class="axis-text" wx:for="{{axis}}" wx:key="*this">{{item}}</text>
+      </view>
+
+      <view class="note-tip">
+        <text>横轴为 A0–C8 的钢琴音域范围；移调乐器按实音标注，高音区上限因演奏者而异</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

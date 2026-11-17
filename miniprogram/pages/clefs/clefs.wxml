@@ -1,0 +1,73 @@
+<!-- 谱号音位对照 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="谱号音位" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+    <view class="settings">
+      <!-- 谱号选择 -->
+      <view class="tabs">
+        <view
+          wx:for="{{clefs}}"
+          wx:key="id"
+          class="tab {{activeIndex === index ? 'active' : ''}}"
+          data-index="{{index}}"
+          bind:tap="onSelect"
+        >
+          <text class="tab-text">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <!-- 当前谱号 -->
+      <view class="card">
+        <view class="card-head">
+          <view class="head-left">
+            <text class="clef-name">{{current.name}}</text>
+            <text class="clef-sub">{{current.shortName}}</text>
+          </view>
+          <view class="clef-badge">
+            <text class="clef-badge-text">中央 C：{{current.centerC}}</text>
+          </view>
+        </view>
+
+        <text class="clef-desc">{{current.desc}}</text>
+      </view>
+
+      <!-- 线音 -->
+      <view class="staff-card">
+        <text class="staff-title">五线音名（第 1 线 → 第 5 线）</text>
+        <view class="line-row">
+          <view class="line-item" wx:for="{{current.lines}}" wx:key="*this">
+            <text class="line-no">{{index + 1}}</text>
+            <text class="line-note">{{item}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 间音 -->
+      <view class="staff-card">
+        <text class="staff-title">四间音名（第 1 间 → 第 4 间）</text>
+        <view class="space-row">
+          <view class="space-item" wx:for="{{current.spaces}}" wx:key="*this">
+            <text class="space-no">{{index + 1}}</text>
+            <text class="space-note">{{item}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 常用乐器 -->
+      <view class="card">
+        <text class="card-title">常见使用乐器</text>
+        <text class="instr-text">{{current.instruments}}</text>
+      </view>
+
+      <view class="note-tip">
+        <text>音名后的数字为八度编号：中央 C 记为 C4，A4 = 440 Hz</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

@@ -1,0 +1,90 @@
+<!-- 移调小助手 -->
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="移调" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+    <view class="settings">
+      <!-- 原调 -->
+      <view class="card">
+        <view class="card-head">
+          <text class="card-title">原调</text>
+          <text class="card-current">{{result.fromLabel}}</text>
+        </view>
+        <view class="grid">
+          <view wx:for="{{roots}}" wx:key="label" class="cell" data-index="{{index}}" bind:tap="onFrom">
+            <text class="cell-text {{fromIndex === index ? 'active' : ''}}">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 目标调 -->
+      <view class="card">
+        <view class="card-head">
+          <text class="card-title">目标调</text>
+          <text class="card-current">{{result.toLabel}}</text>
+        </view>
+        <view class="grid">
+          <view wx:for="{{roots}}" wx:key="label" class="cell" data-index="{{index}}" bind:tap="onTo">
+            <text class="cell-text {{toIndex === index ? 'active' : ''}}">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view class="scroll-body" scroll-y enhanced show-scrollbar="{{false}}" style="height: {{scrollHeight}}px;">
+    <view class="content">
+      <!-- 结果 -->
+      <view class="result-card">
+        <view class="result-top">
+          <text class="result-move">{{result.direction}}</text>
+          <text class="result-name">{{result.intervalName}}</text>
+        </view>
+        <view class="result-meta">
+          <text class="result-meta-text">{{result.fromLabel}} → {{result.toLabel}} · 相距 {{result.semitones}} 个半音</text>
+        </view>
+
+        <view class="scale-row">
+          <text class="scale-label">原调音阶</text>
+          <view class="note-row">
+            <view class="note-chip" wx:for="{{result.fromNotes}}" wx:key="*this">
+              <text class="note-text">{{item}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="scale-row">
+          <text class="scale-label">移调后</text>
+          <view class="note-row">
+            <view class="note-chip accent" wx:for="{{result.toNotes}}" wx:key="*this">
+              <text class="note-text">{{item}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="swap-row" bind:tap="onSwap">
+        <text class="swap-icon">⇅</text>
+        <text class="swap-text">交换原调与目标调</text>
+      </view>
+
+      <!-- 移调乐器 -->
+      <view class="section-title">移调乐器对照</view>
+
+      <view class="instr-card" wx:for="{{instruments}}" wx:key="name">
+        <view class="instr-head">
+          <text class="instr-name">{{item.name}}</text>
+          <view class="instr-badge">
+            <text class="instr-badge-text">记谱 C → 实音 {{item.sounding}}</text>
+          </view>
+        </view>
+        <text class="instr-desc">{{item.desc}}</text>
+      </view>
+
+      <view class="note-tip">
+        <text>移调乐器：记谱音高与实际发声音高不同，读总谱时需按上表换算</text>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

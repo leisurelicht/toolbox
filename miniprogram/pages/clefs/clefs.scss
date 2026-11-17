@@ -1,0 +1,268 @@
+/* ========================================
+   谱号音位对照
+   滚动模式 C：顶部固定 + 内容滚动
+   ======================================== */
+
+page {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 铺满视口的固定容器，自身不滚动 */
+.page-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: #FBFBFD;
+  overflow: hidden;
+}
+
+/* 固定顶栏（导航栏） */
+.top-bar {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 滚动区：高度由 JS 注入 */
+.scroll-body {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.content {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16rpx 32rpx 0;
+}
+
+/* 固定设置区 */
+.settings {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24rpx 32rpx 0;
+}
+
+/* ===== 谱号切换 ===== */
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.tab {
+  width: 50%;
+  box-sizing: border-box;
+  padding: 6rpx;
+}
+
+.tab-text {
+  display: block;
+  height: 76rpx;
+  line-height: 76rpx;
+  text-align: center;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #6B7280;
+  background: #FFF;
+  border-radius: 16rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tab.active .tab-text {
+  color: #FFF;
+  background: #EF6C00;
+}
+
+.tab:active {
+  opacity: 0.75;
+}
+
+/* ===== 卡片 ===== */
+.card {
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFF;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-top: 16rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+
+.head-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.clef-name {
+  display: block;
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #1E1E2E;
+}
+
+.clef-sub {
+  display: block;
+  font-size: 22rpx;
+  color: #B0B5C0;
+  margin-top: 4rpx;
+}
+
+.clef-badge {
+  flex-shrink: 0;
+  margin-left: 12rpx;
+  padding: 6rpx 14rpx;
+  border-radius: 8rpx;
+  background: #FFF3E0;
+}
+
+.clef-badge-text {
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #EF6C00;
+}
+
+.clef-desc {
+  display: block;
+  font-size: 22rpx;
+  color: #9CA3AF;
+  line-height: 1.6;
+}
+
+.card-title {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+  margin-bottom: 12rpx;
+}
+
+.instr-text {
+  display: block;
+  font-size: 24rpx;
+  color: #4B5563;
+  line-height: 1.6;
+}
+
+/* ===== 线音 / 间音 ===== */
+.staff-card {
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFF;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-top: 16rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.staff-title {
+  display: block;
+  font-size: 22rpx;
+  color: #B0B5C0;
+  margin-bottom: 16rpx;
+}
+
+.line-row {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.line-item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 8rpx;
+  padding: 14rpx 0;
+  border-radius: 14rpx;
+  background: #FFF7EC;
+  box-sizing: border-box;
+}
+
+.line-item:last-child {
+  margin-right: 0;
+}
+
+.line-no {
+  font-size: 18rpx;
+  color: #E0A96D;
+  margin-bottom: 6rpx;
+}
+
+.line-note {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #B45309;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.space-row {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.space-item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 8rpx;
+  padding: 14rpx 0;
+  border-radius: 14rpx;
+  background: #F5F6FA;
+  box-sizing: border-box;
+}
+
+.space-item:last-child {
+  margin-right: 0;
+}
+
+.space-no {
+  font-size: 18rpx;
+  color: #B0B5C0;
+  margin-bottom: 6rpx;
+}
+
+.space-note {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #4B5563;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.note-tip {
+  padding: 20rpx 8rpx 0;
+}
+
+.note-tip text {
+  font-size: 22rpx;
+  color: #B0B5C0;
+  line-height: 1.6;
+}
+
+.bottom-safe {
+  height: 60rpx;
+}

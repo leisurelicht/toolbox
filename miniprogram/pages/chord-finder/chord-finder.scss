@@ -1,0 +1,224 @@
+/* ========================================
+   和弦反查器
+   滚动模式 C：顶部固定 + 内容滚动
+   ======================================== */
+
+page {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 铺满视口的固定容器，自身不滚动 */
+.page-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: #FBFBFD;
+  overflow: hidden;
+}
+
+/* 固定顶栏（导航栏） */
+.top-bar {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 滚动区：高度由 JS 注入 */
+.scroll-body {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.content {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16rpx 32rpx 0;
+}
+
+/* 固定设置区 */
+.settings {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24rpx 32rpx 0;
+}
+
+/* ===== 选择卡片 ===== */
+.card {
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFF;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+
+.card-title {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+}
+
+.card-count {
+  font-size: 22rpx;
+  color: #B0B5C0;
+}
+
+/* 12 音格 */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cell {
+  width: 25%;
+  box-sizing: border-box;
+  padding: 6rpx;
+}
+
+.cell-text {
+  display: block;
+  height: 76rpx;
+  line-height: 76rpx;
+  text-align: center;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #6B7280;
+  background: #F5F6FA;
+  border-radius: 16rpx;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cell-text.active {
+  color: #FFF;
+  background: #C2185B;
+}
+
+.cell:active {
+  opacity: 0.75;
+}
+
+/* 清空 */
+.clear-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 16rpx;
+  padding: 14rpx 0;
+  border-radius: 16rpx;
+  background: #F5F6FA;
+}
+
+.clear-row:active {
+  background: #ECEEF2;
+}
+
+.clear-text {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #9CA3AF;
+}
+
+/* ===== 结果 ===== */
+.result-wrap {
+  margin-top: 24rpx;
+}
+
+.result-title {
+  padding: 0 4rpx 12rpx;
+}
+
+.result-title-text {
+  font-size: 22rpx;
+  color: #B0B5C0;
+}
+
+.match-card {
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFF;
+  border-radius: 20rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 12rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.match-left {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 6rpx;
+}
+
+.match-name {
+  flex-shrink: 0;
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #C2185B;
+  font-family: 'Georgia', 'Times New Roman', serif;
+  margin-right: 12rpx;
+}
+
+.match-full {
+  flex: 1;
+  min-width: 0;
+  font-size: 22rpx;
+  color: #9CA3AF;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.match-notes {
+  display: block;
+  font-size: 24rpx;
+  color: #4B5563;
+  letter-spacing: 2rpx;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+/* ===== 空状态 ===== */
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 64rpx 0;
+}
+
+.empty-text {
+  font-size: 26rpx;
+  color: #B0B5C0;
+}
+
+.note-tip {
+  padding: 20rpx 8rpx 0;
+}
+
+.note-tip text {
+  font-size: 22rpx;
+  color: #B0B5C0;
+  line-height: 1.6;
+}
+
+.bottom-safe {
+  height: 60rpx;
+}

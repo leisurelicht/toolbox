@@ -1,0 +1,287 @@
+/* ========================================
+   音分 · 律制对照
+   滚动模式 C：顶部固定 + 内容滚动
+   ======================================== */
+
+page {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 铺满视口的固定容器，自身不滚动 */
+.page-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: #FBFBFD;
+  overflow: hidden;
+}
+
+/* 固定顶栏（导航栏） */
+.top-bar {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 滚动区：高度由 JS 注入 */
+.scroll-body {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.content {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8rpx 32rpx 0;
+}
+
+/* 固定设置区 */
+.settings {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24rpx 32rpx 0;
+}
+
+/* ===== 计算器 ===== */
+.calc-card {
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFF;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.calc-head {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 20rpx;
+}
+
+.calc-title {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+  margin-right: 12rpx;
+}
+
+.calc-sub {
+  font-size: 22rpx;
+  color: #B0B5C0;
+}
+
+.input-row {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-box {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-label {
+  font-size: 20rpx;
+  color: #B0B5C0;
+  margin-bottom: 8rpx;
+}
+
+.input-field {
+  width: 100%;
+  box-sizing: border-box;
+  height: 80rpx;
+  padding: 0 20rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1E1E2E;
+  background: #F5F6FA;
+  border-radius: 16rpx;
+}
+
+.input-arrow {
+  flex-shrink: 0;
+  width: 60rpx;
+  text-align: center;
+  font-size: 26rpx;
+  color: #B0B5C0;
+  padding-bottom: 24rpx;
+}
+
+/* 结果 */
+.calc-result {
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid #F3F4F6;
+}
+
+.result-main {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.result-cents {
+  font-size: 64rpx;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #558B2F;
+  font-variant-numeric: tabular-nums;
+}
+
+.result-cents.up {
+  color: #C2185B;
+}
+
+.result-cents.down {
+  color: #0369A1;
+}
+
+.result-cents.zero {
+  color: #558B2F;
+}
+
+.result-unit {
+  font-size: 26rpx;
+  color: #9CA3AF;
+  margin-left: 10rpx;
+}
+
+.result-sub {
+  margin-top: 10rpx;
+  text-align: center;
+}
+
+.result-sub-text {
+  font-size: 22rpx;
+  color: #9CA3AF;
+}
+
+.calc-empty {
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 1rpx solid #F3F4F6;
+  text-align: center;
+}
+
+.calc-empty-text {
+  font-size: 22rpx;
+  color: #B0B5C0;
+}
+
+/* ===== 律制对比 ===== */
+.section-title {
+  font-size: 24rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+  padding: 20rpx 4rpx 14rpx;
+}
+
+.deg-card {
+  width: 100%;
+  box-sizing: border-box;
+  background: #FFF;
+  border-radius: 20rpx;
+  padding: 24rpx 28rpx;
+  margin-bottom: 12rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.deg-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-bottom: 12rpx;
+  margin-bottom: 8rpx;
+  border-bottom: 1rpx solid #F3F4F6;
+}
+
+.deg-name {
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #1E1E2E;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.deg-et {
+  font-size: 22rpx;
+  color: #B0B5C0;
+}
+
+.deg-line {
+  display: flex;
+  align-items: center;
+  padding: 8rpx 0;
+}
+
+.deg-label {
+  flex-shrink: 0;
+  width: 140rpx;
+  font-size: 22rpx;
+  color: #9CA3AF;
+}
+
+.deg-ratio {
+  flex-shrink: 0;
+  width: 110rpx;
+  font-size: 22rpx;
+  color: #B0B5C0;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.deg-val {
+  flex: 1;
+  min-width: 0;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1E1E2E;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.deg-dev {
+  flex-shrink: 0;
+  width: 130rpx;
+  text-align: right;
+  font-size: 22rpx;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.deg-dev.up {
+  color: #C2185B;
+}
+
+.deg-dev.down {
+  color: #0369A1;
+}
+
+.deg-dev.zero {
+  color: #B0B5C0;
+}
+
+.note-tip {
+  padding: 20rpx 8rpx 0;
+}
+
+.note-tip text {
+  font-size: 22rpx;
+  color: #B0B5C0;
+  line-height: 1.6;
+}
+
+.bottom-safe {
+  height: 60rpx;
+}
