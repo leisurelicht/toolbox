@@ -24,6 +24,14 @@
 | 音乐 | 音程计算 | `pages/interval-calculator/interval-calculator` |
 | 音乐 | 术语词典 | `pages/music-terms/music-terms` |
 | 音乐 | 调式音阶 | `pages/modes-scales/modes-scales` |
+| 音乐 | 移调 | `pages/transpose/transpose` |
+| 音乐 | 和弦反查 | `pages/chord-finder/chord-finder` |
+| 音乐 | 五度圈 | `pages/circle-of-fifths/circle-of-fifths` |
+| 音乐 | 音分律制 | `pages/tuning-cents/tuning-cents` |
+| 音乐 | 谱号音位 | `pages/clefs/clefs` |
+| 音乐 | 速度对照 | `pages/tempo-marks/tempo-marks` |
+| 音乐 | 时值计算 | `pages/rhythm-calculator/rhythm-calculator` |
+| 音乐 | 乐器音域 | `pages/instrument-range/instrument-range` |
 
 > 「涨了吗」的基金详情页为 `pages/fund-detail/fund-detail`，属于该工具的辅助页面，不单独列为工具。
 
@@ -102,8 +110,8 @@
 
 导航栏是普通文档流元素（不是 fixed），**位置取决于滚动模式**（见 §5.3）：
 
-- **页面整体滚动**（index / mine / note-names）：放在 `.wxml` 顶部、页面容器之外。
-- **固定顶栏 + 局部滚动**（key-signature / pitch-frequency）：放进 `position: fixed` 的 `.page-container` 内部。
+- **固定顶栏 + 局部滚动**（index / key-signature / pitch-frequency 及所有工具内容页）：放进 `position: fixed` 的 `.page-container` 内部。
+- **页面整体滚动**（mine / random / what-to-eat 等早期页面）：放在 `.wxml` 顶部、页面容器之外。
 - 导航栏前允许有注释；"首行"不是硬性要求，**层级位置**才是。
 
 ```html
@@ -220,7 +228,7 @@
 
 先选滚动模式，再写 WXML/SCSS。仓库现有三种，选错就会出现"顶部跟着滚""底部被裁""双滚动条"。
 
-**模式 A：页面整体滚动**（index / mine / note-names）
+**模式 A：页面整体滚动**（mine / random / what-to-eat 等早期页面）
 
 - 导航栏在 `.wxml` 顶部，由页面自身滚动，或用一个 `height: 100vh` 的 `scroll-view` 承担滚动。
 - 用 `100vh` 时导航栏也在文档流里额外占高，底部内容可能被裁；需要精确控制或固定顶栏时改用模式 C，或把滚动区高度扣掉导航栏。
@@ -233,7 +241,7 @@
 - 导航栏在容器之外，容器用 `height: 100vh` + `overflow: hidden`。
 - 此时页面总高 = 导航栏 + `100vh`，底部会超出视口；**必须真机确认底部按钮/内容没有被裁**。底部留白加在滚动内容里，不要指望页面滚动。
 
-**模式 C：固定容器 + JS 测高**（key-signature / pitch-frequency）
+**模式 C：固定容器 + JS 测高**（index / key-signature / pitch-frequency 及全部工具内容页）
 
 - `.page-container`：`position: fixed; top: 0; right: 0; bottom: 0; left: 0; display: flex; flex-direction: column; overflow: hidden;`（比 `height: 100vh` 更稳）
 - `<navigation-bar>` **放在**这个固定容器内部；固定区（导航栏、Tab、筛选条）加 `flex-shrink: 0`。
@@ -258,6 +266,7 @@ function applyScrollHeight(inst: any) {
   完整实现含"测不到时用 `wx.getSystemInfoSync()` 兜底"，见 `pages/key-signature/key-signature.ts`。WXML 侧写 `style="height: {{scrollHeight}}px"`。
 - 备选方案：`flex: 1; height: 0;`，只在容器高度确定时可靠。
 - 适合有固定顶栏、筛选条、需要精确控制滚动区的页面。
+- **内容页也建议用此模式**：`height: 100vh` 的 scroll-view 与导航栏叠加会多出导航栏高度，导致整页可滚动、scroll-view 底部约 88px 永远看不见（"底部被裁 + 双滚动"）。所有工具页已统一为模式 C。
 
 其余通用规则：
 
