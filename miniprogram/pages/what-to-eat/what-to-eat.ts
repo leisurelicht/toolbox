@@ -203,6 +203,35 @@ function refreshPool(inst: any) {
   })
 }
 
+/* ===== 滚动区测高 ===== */
+/* 滚动区高度 = 视口高度 - 固定区占用高度（含导航栏） */
+function applyScrollHeight(inst: any) {
+  const query = wx.createSelectorQuery()
+  query.select('.page-container').boundingClientRect()
+  query.select('.top-area').boundingClientRect()
+  query.exec((res: any[]) => {
+    const container = res && res[0]
+    const topArea = res && res[1]
+    let h = 0
+    if (container && topArea) {
+      h = Math.round(container.height - (topArea.bottom - container.top))
+    }
+    if (!h || h <= 0) {
+      // 兜底估算：导航栏约 44px + 状态栏 + 固定区约 700rpx
+      const info = wx.getSystemInfoSync()
+      const rpx = info.windowWidth / 750
+      h = Math.round(info.windowHeight - 44 - (info.statusBarHeight || 0) - 700 * rpx)
+    }
+    if (h > 0) {
+      inst.setData({ scrollHeight: h })
+    }
+  })
+}
+
+function remeasure(inst: any) {
+  wx.nextTick(() => applyScrollHeight(inst))
+}
+
 function shuffle<T>(list: T[]): T[] {
   const result = list.slice()
   for (let i = result.length - 1; i > 0; i -= 1) {
@@ -344,6 +373,7 @@ Component({
     shakeEnabled: true,
     poolCount: 0,
     poolHint: '',
+    scrollHeight: 0,
 
     result: null as Dish | null,
     resultMeta: '',
@@ -385,6 +415,9 @@ Component({
       })
       refreshPool(this)
     },
+    ready() {
+      applyScrollHeight(this)
+    },
     detached() {
       stopShake()
       clearRollTimer()
@@ -394,6 +427,8 @@ Component({
   pageLifetimes: {
     show() {
       if (this.data.shakeEnabled) startShake(this)
+      // 首次 show 可能早于 ready，此时交给 ready 测；之后每次回到页面再校准
+      if (this.data.scrollHeight > 0) remeasure(this)
     },
     hide() {
       stopShake()
@@ -415,6 +450,7 @@ Component({
         resultAccepted: false,
       })
       refreshPool(this)
+      remeasure(this)
     },
 
     onCategoryChange(e: WechatMiniprogram.TouchEvent) {
@@ -428,6 +464,7 @@ Component({
         resultAccepted: false,
       })
       refreshPool(this)
+      remeasure(this)
     },
 
     onToggleRepeat() {
@@ -472,6 +509,7 @@ Component({
         resultAccepted: false,
         rollName: firstPreview.name,
       })
+      remeasure(this)
 
       let step = 0
       rollTimer = setInterval(() => {
@@ -485,6 +523,7 @@ Component({
             resultMeta: dishMeta(finalDish),
             resultAccepted: false,
           })
+          remeasure(this)
           wx.vibrateShort({ type: 'medium' })
           return
         }
@@ -514,6 +553,7 @@ Component({
       })
       persist(this)
       refreshPool(this)
+      remeasure(this)
       wx.vibrateShort({ type: 'light' })
       wx.showToast({ title: '已记下', icon: 'success', duration: 1000 })
     },
@@ -557,6 +597,7 @@ Component({
           resultMeta: dishMeta(winner),
           resultAccepted: false,
         })
+        remeasure(this)
         wx.vibrateShort({ type: 'medium' })
         return
       }
@@ -571,6 +612,7 @@ Component({
 
     onExitPk() {
       this.setData({ pkMode: false, pkPool: [], pkPair: [], pkRound: 0, pkTotal: 0 })
+      remeasure(this)
     },
 
     /* ========== 我的菜单 ========== */
@@ -665,6 +707,7 @@ Component({
           })
           persist(this)
           refreshPool(this)
+          remeasure(this)
         },
       })
     },

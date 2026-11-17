@@ -3,11 +3,51 @@
    设计方向：暖橙 · 轻松 · 一眼出结果
    ======================================== */
 
-.page {
+page {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 页面容器：铺满视口，自身不滚动 */
+.page-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  background: #FBFBFD;
+  overflow: hidden;
+}
+
+/* 导航栏固定，不参与压缩 */
+.nav-wrap {
+  flex-shrink: 0;
+  width: 100%;
+}
+
+/* 固定区：导航栏下方，不随内容滚动 */
+.top-area {
+  flex-shrink: 0;
   width: 100%;
   box-sizing: border-box;
-  padding: 0 32rpx;
-  background: #FBFBFD;
+  padding: 0 32rpx 8rpx;
+}
+
+/* 仅此区域滚动，高度由 JS 测量 */
+.scroll-body {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.scroll-inner {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24rpx 32rpx 0;
+  overflow: hidden;
 }
 
 .hero {
@@ -282,7 +322,6 @@
 .settings-card {
   width: 100%;
   box-sizing: border-box;
-  margin-top: 24rpx;
   padding: 28rpx;
   background: #FFFFFF;
   border-radius: 24rpx;
@@ -763,5 +802,5 @@
    底部留白
    =========================== */
 .bottom-spacer {
-  height: 80rpx;
+  height: calc(80rpx + env(safe-area-inset-bottom));
 }
