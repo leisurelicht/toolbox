@@ -17,9 +17,15 @@
 | 日常 | 计数器 | `pages/counter/counter` |
 | 日常 | 随机数 | `pages/random/random` |
 | 日常 | 吃点啥 | `pages/what-to-eat/what-to-eat` |
+| 日常 | 涨了吗 | `pages/fund-premium/fund-premium` |
 | 音乐 | 调号速查 | `pages/key-signature/key-signature` |
 | 音乐 | 音名对照 | `pages/note-names/note-names` |
 | 音乐 | 频率对照 | `pages/pitch-frequency/pitch-frequency` |
+| 音乐 | 音程计算 | `pages/interval-calculator/interval-calculator` |
+| 音乐 | 术语词典 | `pages/music-terms/music-terms` |
+| 音乐 | 调式音阶 | `pages/modes-scales/modes-scales` |
+
+> 「涨了吗」的基金详情页为 `pages/fund-detail/fund-detail`，属于该工具的辅助页面，不单独列为工具。
 
 > 新增或下线工具时**必须**同步更新上表（见 §6）。
 
@@ -57,7 +63,10 @@
     ├── custom-tab-bar/          # 自定义底部 TabBar（index.{json,wxml,ts,scss}）
     ├── components/
     │   └── navigation-bar/      # 自定义导航栏组件（所有页面都在用）
-    ├── utils/util.ts            # logs 页面依赖其中的 formatTime
+    ├── utils/
+    │   ├── util.ts              # logs 页面依赖其中的 formatTime
+    │   ├── fund-data.ts         # 涨了吗：ETF 配置、格式化与跟踪误差计算
+    │   └── fund-api.ts          # 涨了吗：腾讯行情 / QDII Lens 接口
     └── pages/
         ├── index/               # 首页：分类 Tab + 工具列表（数据驱动）
         ├── counter/             # 计数器
@@ -66,6 +75,8 @@
         ├── key-signature/       # 调号速查
         ├── note-names/          # 音名对照
         ├── pitch-frequency/     # 频率对照
+        ├── fund-premium/        # 涨了吗：ETF 溢折率列表
+        ├── fund-detail/         # 涨了吗：基金详情
         ├── mine/                # 我的
         └── logs/                # 模板遗留页，可用于调试（保持注册，勿删）
 ```
