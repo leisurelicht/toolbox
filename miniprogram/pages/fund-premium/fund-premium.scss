@@ -1,0 +1,625 @@
+/* ========================================
+   涨了吗 · ETF 溢折率列表
+   布局：固定顶栏 + 局部滚动（模式 C）
+   ======================================== */
+
+page {
+  height: 100%;
+  overflow: hidden;
+}
+
+.page-container {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  background: #FBFBFD;
+  overflow: hidden;
+}
+
+/* ===== 固定顶栏 ===== */
+.top-bar {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8rpx 32rpx 0;
+}
+
+/* 指数切换 */
+.tab-bar {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6rpx;
+  margin: 8rpx 0 12rpx;
+  background: #F1F2F6;
+  border-radius: 20rpx;
+}
+
+.tab-item {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14rpx 0 12rpx;
+  border-radius: 16rpx;
+}
+
+.tab-item.active {
+  background: #FFFFFF;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.tab-text {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #9CA3AF;
+  line-height: 32rpx;
+}
+
+.tab-item.active .tab-text {
+  color: #1E1E2E;
+  font-weight: 700;
+}
+
+.tab-dot {
+  width: 24rpx;
+  height: 4rpx;
+  border-radius: 2rpx;
+  background: #4C6EF5;
+  margin-top: 8rpx;
+}
+
+/* 溢价中位数迷你趋势 */
+.trend-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 164rpx;
+  box-sizing: border-box;
+  padding: 16rpx 20rpx 14rpx;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+}
+
+.trend-head {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 10rpx;
+}
+
+.trend-title-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  margin-right: 16rpx;
+}
+
+.trend-title {
+  display: block;
+  font-size: 23rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+  line-height: 30rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trend-range {
+  display: block;
+  font-size: 18rpx;
+  color: #B0B5C0;
+  line-height: 26rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trend-current {
+  font-size: 32rpx;
+  font-weight: 800;
+  line-height: 36rpx;
+  flex-shrink: 0;
+}
+
+.trend-current.up {
+  color: #E8453C;
+}
+
+.trend-current.down {
+  color: #1CAD6D;
+}
+
+.trend-current.flat {
+  color: #6B7280;
+}
+
+.trend-bars {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.trend-col {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  margin-right: 2rpx;
+}
+
+.trend-col:last-child {
+  margin-right: 0;
+}
+
+.trend-bar-up {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 50%;
+  background: #E8453C;
+  opacity: 0.32;
+  border-radius: 2rpx 2rpx 0 0;
+}
+
+.trend-bar-down {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  background: #1CAD6D;
+  opacity: 0.32;
+  border-radius: 0 0 2rpx 2rpx;
+}
+
+.trend-col.is-last .trend-bar-up {
+  opacity: 1;
+}
+
+.trend-col.is-last .trend-bar-down {
+  opacity: 1;
+}
+
+/* 全为正溢价：从底部起算 */
+.trend-bars.anchor-bottom .trend-bar-up {
+  bottom: 0;
+  border-radius: 2rpx;
+}
+
+/* 状态行 */
+.status-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12rpx 8rpx 8rpx;
+}
+
+.status-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.status-dot {
+  width: 10rpx;
+  height: 10rpx;
+  border-radius: 50%;
+  background: #B0B5C0;
+  margin-right: 8rpx;
+}
+
+.status-dot.live {
+  background: #1CAD6D;
+}
+
+.status-text {
+  font-size: 20rpx;
+  color: #9CA3AF;
+  line-height: 28rpx;
+}
+
+.status-refresh {
+  font-size: 20rpx;
+  color: #9CA3AF;
+  line-height: 28rpx;
+  padding: 4rpx 0 4rpx 16rpx;
+}
+
+/* ===== 滚动区 ===== */
+.scroll-body {
+  flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.scroll-inner {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 32rpx;
+}
+
+.list-hint {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14rpx 4rpx 12rpx;
+}
+
+.list-hint-text {
+  font-size: 20rpx;
+  color: #B0B5C0;
+}
+
+.list-hint-count {
+  font-size: 20rpx;
+  color: #B0B5C0;
+}
+
+/* ===== 基金卡片 ===== */
+.fund-card {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  border: 1rpx solid rgba(0, 0, 0, 0.04);
+}
+
+.fund-card:active {
+  background: #F8F9FC;
+}
+
+.fund-top {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 18rpx;
+}
+
+.fund-left {
+  flex: 1;
+  min-width: 0;
+  margin-right: 16rpx;
+}
+
+.fund-name {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+  line-height: 38rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fund-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 8rpx;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.fund-code {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #F0F2F8;
+  padding: 0 10rpx;
+  border-radius: 6rpx;
+  flex-shrink: 0;
+}
+
+.fund-code-text {
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #6B7280;
+  line-height: 30rpx;
+}
+
+.sub-badge {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 8rpx;
+  padding: 0 8rpx;
+  border-radius: 4rpx;
+  flex-shrink: 0;
+}
+
+.sub-badge-text {
+  font-size: 18rpx;
+  font-weight: 600;
+  line-height: 28rpx;
+}
+
+.sub-suspended {
+  background: #FDE8E7;
+  color: #E8453C;
+}
+
+.sub-suspended .sub-badge-text {
+  color: #E8453C;
+}
+
+.sub-limited {
+  background: #FFF4E5;
+  color: #F0883A;
+}
+
+.sub-limited .sub-badge-text {
+  color: #F0883A;
+}
+
+.sub-open {
+  background: #E6F7F0;
+  color: #1CAD6D;
+}
+
+.sub-open .sub-badge-text {
+  color: #1CAD6D;
+}
+
+.fund-company {
+  margin-left: 10rpx;
+  font-size: 20rpx;
+  color: #9CA3AF;
+  line-height: 28rpx;
+  flex-shrink: 0;
+}
+
+.fund-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.fund-price {
+  font-size: 40rpx;
+  font-weight: 800;
+  line-height: 44rpx;
+}
+
+.fund-change {
+  font-size: 22rpx;
+  font-weight: 600;
+  line-height: 30rpx;
+  margin-top: 2rpx;
+}
+
+.up {
+  color: #E8453C;
+}
+
+.down {
+  color: #1CAD6D;
+}
+
+.flat {
+  color: #6B7280;
+}
+
+.fund-price.flat {
+  color: #1E1E2E;
+}
+
+/* 指标行 */
+.fund-metrics {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 18rpx;
+  border-top: 1rpx solid #F2F4F8;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.metric-label {
+  font-size: 20rpx;
+  color: #B0B5C0;
+  line-height: 28rpx;
+}
+
+.metric-value {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #1E1E2E;
+  line-height: 36rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.metric-premium {
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.metric-premium.premium-high {
+  color: #E8453C;
+}
+
+.metric-premium.premium {
+  color: #F06B32;
+}
+
+.metric-premium.discount {
+  color: #1CAD6D;
+}
+
+.metric-premium.flat {
+  color: #6B7280;
+}
+
+/* 卡片底部 */
+.fund-foot {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 16rpx;
+}
+
+.foot-text {
+  font-size: 20rpx;
+  color: #9CA3AF;
+  line-height: 28rpx;
+  margin-right: 20rpx;
+}
+
+.foot-link {
+  margin-left: auto;
+  font-size: 20rpx;
+  color: #4C6EF5;
+  line-height: 28rpx;
+}
+
+/* ===== 状态 / 加载 / 错误 ===== */
+.state-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding-top: 180rpx;
+}
+
+.loading-spinner {
+  width: 56rpx;
+  height: 56rpx;
+  border: 4rpx solid #E8ECF1;
+  border-top-color: #4C6EF5;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.state-icon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #FFF0E6;
+  margin-bottom: 20rpx;
+}
+
+.state-icon-text {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #F76707;
+  line-height: 64rpx;
+}
+
+.state-text {
+  font-size: 26rpx;
+  color: #9CA3AF;
+  line-height: 40rpx;
+  text-align: center;
+  padding: 0 40rpx;
+  margin-top: 20rpx;
+}
+
+.state-error {
+  color: #6B7280;
+}
+
+.state-btn {
+  margin-top: 28rpx;
+  padding: 14rpx 52rpx;
+  border-radius: 32rpx;
+  background: #4C6EF5;
+}
+
+.state-btn-text {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+  line-height: 32rpx;
+}
+
+/* ===== 底部 ===== */
+.update-row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 18rpx 0 10rpx;
+}
+
+.update-text {
+  font-size: 20rpx;
+  color: #B0B5C0;
+  line-height: 28rpx;
+}
+
+.disclaimer {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 8rpx;
+  padding: 16rpx 20rpx;
+  background: #F8F9FC;
+  border-radius: 16rpx;
+}
+
+.disclaimer-text {
+  display: block;
+  font-size: 20rpx;
+  color: #B0B5C0;
+  line-height: 32rpx;
+}
+
+.bottom-safe {
+  height: 60rpx;
+}

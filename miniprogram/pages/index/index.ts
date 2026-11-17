@@ -56,6 +56,17 @@ const ALL_CATEGORIES: Category[] = [
         comingSoon: false,
         path: '/pages/what-to-eat/what-to-eat',
       },
+      {
+        id: 'fund-premium',
+        name: '涨了吗',
+        symbol: '涨',
+        description: '溢价监控',
+        iconBg: '#FFF1F0',
+        iconColor: '#E8453C',
+        borderColor: '#FFD8D6',
+        comingSoon: false,
+        path: '/pages/fund-premium/fund-premium',
+      },
     ],
   },
   {

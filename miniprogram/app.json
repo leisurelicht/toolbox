@@ -10,6 +10,8 @@
     "pages/interval-calculator/interval-calculator",
     "pages/music-terms/music-terms",
     "pages/modes-scales/modes-scales",
+    "pages/fund-premium/fund-premium",
+    "pages/fund-detail/fund-detail",
     "pages/mine/mine",
     "pages/logs/logs"
   ],

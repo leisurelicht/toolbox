@@ -1,0 +1,254 @@
+<!-- 涨了吗 · 基金详情 -->
+<view class="page-container">
+  <navigation-bar title="基金详情" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+
+  <!-- 固定头部：名称 / 费率 / 最新价 -->
+  <view class="top-bar">
+    <view class="head-row">
+      <view class="head-left">
+        <text class="fund-name">{{name}}</text>
+        <view class="head-meta">
+          <view class="fund-code">
+            <text class="fund-code-text">{{code}}</text>
+          </view>
+          <text wx:if="{{company}}" class="fund-company">{{company}}</text>
+        </view>
+      </view>
+      <view class="fee-chip">
+        <text class="fee-chip-label">费率</text>
+        <text class="fee-chip-value">{{feeStr}}</text>
+      </view>
+    </view>
+
+    <view class="price-row">
+      <text class="price {{changeClass}}">{{priceStr}}</text>
+      <text class="change {{changeClass}}">{{changeStr}}</text>
+      <view class="premium-chip {{premiumClass}}">
+        <text class="premium-chip-label">溢折率</text>
+        <text class="premium-chip-value">{{premiumStr}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 详情滚动区 -->
+  <scroll-view
+    class="scroll-body"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    style="height: {{scrollHeight}}px;"
+  >
+    <view class="scroll-inner">
+      <view wx:if="{{loading}}" class="state-box">
+        <view class="loading-spinner"></view>
+        <text class="state-text">正在加载基金数据…</text>
+      </view>
+      <view wx:elif="{{error}}" class="state-box">
+        <view class="state-icon">
+          <text class="state-icon-text">!</text>
+        </view>
+        <text class="state-text state-error">{{error}}</text>
+        <view class="state-btn" bind:tap="onRefresh">
+          <text class="state-btn-text">重试</text>
+        </view>
+      </view>
+
+      <block wx:else>
+        <!-- 行情指标 -->
+        <view class="card">
+          <view class="card-title">
+            <text class="card-title-text">行情指标</text>
+          </view>
+
+          <view class="metric-row">
+            <view class="metric-cell">
+              <text class="cell-label">开盘价</text>
+              <text class="cell-value">{{openStr}}</text>
+            </view>
+            <view class="metric-cell">
+              <text class="cell-label">最高价</text>
+              <text class="cell-value up">{{highStr}}</text>
+            </view>
+            <view class="metric-cell">
+              <text class="cell-label">最低价</text>
+              <text class="cell-value down">{{lowStr}}</text>
+            </view>
+          </view>
+
+          <view class="metric-row">
+            <view class="metric-cell">
+              <text class="cell-label">昨收</text>
+              <text class="cell-value">{{prevCloseStr}}</text>
+            </view>
+            <view class="metric-cell">
+              <text class="cell-label">参考净值</text>
+              <text class="cell-value">{{navStr}}</text>
+            </view>
+            <view class="metric-cell">
+              <text class="cell-label">成交额</text>
+              <text class="cell-value">{{amountStr}}</text>
+            </view>
+          </view>
+
+          <view class="metric-row metric-row-last">
+            <view class="metric-cell">
+              <text class="cell-label">换手率</text>
+              <text class="cell-value">{{turnoverStr}}</text>
+            </view>
+            <view class="metric-cell">
+              <text class="cell-label">跟踪误差</text>
+              <text class="cell-value">{{trackingErrLoading ? '计算中' : trackingErrStr}}</text>
+            </view>
+            <view class="metric-cell">
+              <text class="cell-label">费率</text>
+              <text class="cell-value">{{feeStr}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 走势图 -->
+        <view class="card chart-card">
+          <view class="chart-head">
+            <view class="chart-title-wrap">
+              <text class="chart-title-text">{{chartMode === 'premium' ? '溢折率走势' : '价格走势'}}</text>
+              <text class="chart-sub">{{chartMode === 'premium' ? premiumChart.count : priceChart.count}} 个交易日</text>
+            </view>
+            <view class="chart-tabs">
+              <view
+                class="chart-tab {{chartMode === 'premium' ? 'active' : ''}}"
+                data-mode="premium"
+                bind:tap="switchChart"
+              >
+                <text class="chart-tab-text">溢折率</text>
+              </view>
+              <view
+                class="chart-tab {{chartMode === 'price' ? 'active' : ''}}"
+                data-mode="price"
+                bind:tap="switchChart"
+              >
+                <text class="chart-tab-text">价格</text>
+              </view>
+            </view>
+          </view>
+
+          <block wx:if="{{chartMode === 'premium'}}">
+            <view class="chart-stats">
+              <view class="stat-item">
+                <text class="stat-label">最新</text>
+                <text class="stat-value {{premiumChart.latestClass}}">{{premiumChart.latestStr}}</text>
+              </view>
+              <view class="stat-item">
+                <text class="stat-label">均值</text>
+                <text class="stat-value">{{premiumChart.avgStr}}</text>
+              </view>
+              <view class="stat-item stat-item-wide">
+                <text class="stat-label">区间</text>
+                <text class="stat-value stat-small">{{premiumChart.rangeStr}}</text>
+              </view>
+            </view>
+
+            <view wx:if="{{premiumChart.empty}}" class="chart-empty">
+              <text class="chart-empty-text">暂无溢价历史数据</text>
+            </view>
+            <block wx:else>
+              <view class="chart-body">
+                <view class="axis-col">
+                  <text class="axis-label">{{premiumChart.axis.maxStr}}</text>
+                  <text class="axis-label">{{premiumChart.axis.midStr}}</text>
+                  <text class="axis-label">{{premiumChart.axis.minStr}}</text>
+                </view>
+                <view class="plot">
+                  <view class="plot-zero" style="top: {{premiumChart.zeroTop}};"></view>
+                  <view class="premium-bars">
+                    <view
+                      wx:for="{{premiumChart.bars}}"
+                      wx:key="i"
+                      class="premium-col"
+                    >
+                      <view
+                        class="premium-bar {{item.cls}} {{item.isLast ? 'is-last' : ''}}"
+                        style="top: {{item.top}}; height: {{item.height}};"
+                      ></view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+              <view class="x-axis">
+                <text class="x-label">{{premiumChart.axis.startDate}}</text>
+                <text class="x-label">{{premiumChart.axis.midDate}}</text>
+                <text class="x-label">{{premiumChart.axis.endDate}}</text>
+              </view>
+            </block>
+          </block>
+
+          <block wx:else>
+            <view class="chart-stats">
+              <view class="stat-item">
+                <text class="stat-label">最新</text>
+                <text class="stat-value {{priceChart.latestClass}}">{{priceChart.latestStr}}</text>
+              </view>
+              <view class="stat-item stat-item-wide">
+                <text class="stat-label">区间</text>
+                <text class="stat-value stat-small">{{priceChart.rangeStr}}</text>
+              </view>
+            </view>
+
+            <view wx:if="{{priceChart.empty}}" class="chart-empty">
+              <text class="chart-empty-text">暂无价格数据</text>
+            </view>
+            <block wx:else>
+              <view class="chart-body">
+                <view class="axis-col">
+                  <text class="axis-label">{{priceChart.axis.maxStr}}</text>
+                  <text class="axis-label">{{priceChart.axis.midStr}}</text>
+                  <text class="axis-label">{{priceChart.axis.minStr}}</text>
+                </view>
+                <view class="plot candle-plot">
+                  <view class="plot-grid grid-one"></view>
+                  <view class="plot-grid grid-two"></view>
+                  <view class="plot-grid grid-three"></view>
+                  <view class="candles">
+                    <view wx:for="{{priceChart.candles}}" wx:key="i" class="candle-col">
+                      <view
+                        class="candle-wick {{item.cls}}"
+                        style="top: {{item.wickTop}}; height: {{item.wickHeight}};"
+                      ></view>
+                      <view
+                        class="candle-body {{item.cls}}"
+                        style="top: {{item.bodyTop}}; height: {{item.bodyHeight}};"
+                      ></view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+              <view class="x-axis">
+                <text class="x-label">{{priceChart.axis.startDate}}</text>
+                <text class="x-label">{{priceChart.axis.midDate}}</text>
+                <text class="x-label">{{priceChart.axis.endDate}}</text>
+              </view>
+              <view class="ma-row">
+                <text class="ma-item">MA5 {{priceChart.ma5}}</text>
+                <text class="ma-item">MA10 {{priceChart.ma10}}</text>
+                <text class="ma-item">MA20 {{priceChart.ma20}}</text>
+              </view>
+            </block>
+          </block>
+
+          <view class="chart-source">
+            <text class="chart-source-text">数据来源：腾讯财经、QDII Lens，仅供参考</text>
+          </view>
+        </view>
+
+        <view class="update-row" bind:tap="onRefresh">
+          <text class="update-text">更新 {{lastUpdate}} · 点击刷新</text>
+        </view>
+
+        <view class="disclaimer">
+          <text class="disclaimer-text">数据仅供参考，不构成投资建议。基金有风险，投资需谨慎。</text>
+        </view>
+      </block>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>

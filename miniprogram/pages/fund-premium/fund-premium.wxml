@@ -1,0 +1,150 @@
+<!-- 涨了吗 · ETF 溢折率列表 -->
+<view class="page-container">
+  <navigation-bar title="涨了吗" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+
+  <!-- 固定顶栏：指数切换 + 溢价中位数趋势 + 状态 -->
+  <view class="top-bar">
+    <view class="tab-bar">
+      <view
+        class="tab-item {{activeTab === 'nasdaq' ? 'active' : ''}}"
+        data-tab="nasdaq"
+        bind:tap="switchTab"
+      >
+        <text class="tab-text">纳指100</text>
+        <view wx:if="{{activeTab === 'nasdaq'}}" class="tab-dot"></view>
+      </view>
+      <view
+        class="tab-item {{activeTab === 'sp500' ? 'active' : ''}}"
+        data-tab="sp500"
+        bind:tap="switchTab"
+      >
+        <text class="tab-text">标普500</text>
+        <view wx:if="{{activeTab === 'sp500'}}" class="tab-dot"></view>
+      </view>
+      <view
+        class="tab-item {{activeTab === 'us50' ? 'active' : ''}}"
+        data-tab="us50"
+        bind:tap="switchTab"
+      >
+        <text class="tab-text">美国50</text>
+        <view wx:if="{{activeTab === 'us50'}}" class="tab-dot"></view>
+      </view>
+    </view>
+
+    <view class="trend-card">
+      <view class="trend-head">
+        <view class="trend-title-wrap">
+          <text class="trend-title">{{trend.label}} · 溢价中位数</text>
+          <text class="trend-range">{{trend.rangeStr}}</text>
+        </view>
+        <text class="trend-current {{trend.cls}}">{{trend.currentStr}}</text>
+      </view>
+      <view class="trend-bars anchor-{{trend.anchor}}">
+        <view wx:for="{{trend.bars}}" wx:key="i" class="trend-col {{index === trend.lastIndex ? 'is-last' : ''}}">
+          <view class="trend-bar-up" style="height: {{item.up}}%;"></view>
+          <view class="trend-bar-down" style="height: {{item.down}}%;"></view>
+        </view>
+      </view>
+    </view>
+
+    <view class="status-row">
+      <view class="status-left">
+        <view class="status-dot {{isTrading ? 'live' : ''}}"></view>
+        <text class="status-text">{{isTrading ? '交易中' : '非交易时段'}}</text>
+      </view>
+      <text class="status-refresh" bind:tap="onRefresh">更新 {{lastUpdate}} · {{refreshing ? '刷新中' : '点击刷新'}}</text>
+    </view>
+  </view>
+
+  <!-- 列表滚动区 -->
+  <scroll-view
+    class="scroll-body"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    refresher-enabled
+    refresher-triggered="{{refreshing}}"
+    bindrefresherrefresh="onRefresh"
+    style="height: {{scrollHeight}}px;"
+  >
+    <view class="scroll-inner">
+      <view wx:if="{{loading && list.length === 0}}" class="state-box">
+        <view class="loading-spinner"></view>
+        <text class="state-text">正在加载行情数据…</text>
+      </view>
+      <view wx:elif="{{error}}" class="state-box">
+        <view class="state-icon">
+          <text class="state-icon-text">!</text>
+        </view>
+        <text class="state-text state-error">{{error}}</text>
+        <view class="state-btn" bind:tap="onRefresh">
+          <text class="state-btn-text">重试</text>
+        </view>
+      </view>
+      <view wx:else class="card-list">
+        <view class="list-hint">
+          <text class="list-hint-text">按溢折率从低到高排序</text>
+          <text class="list-hint-count">{{list.length}} 只</text>
+        </view>
+
+        <view
+          wx:for="{{list}}"
+          wx:key="code"
+          class="fund-card"
+          data-code="{{item.code}}"
+          bind:tap="goDetail"
+        >
+          <view class="fund-top">
+            <view class="fund-left">
+              <text class="fund-name">{{item.fullName}}</text>
+              <view class="fund-meta">
+                <view class="fund-code">
+                  <text class="fund-code-text">{{item.code}}</text>
+                </view>
+                <view wx:if="{{item.subLabel}}" class="sub-badge sub-{{item.subStatus}}">
+                  <text class="sub-badge-text">{{item.subLabel}}</text>
+                </view>
+                <text class="fund-company">{{item.company}}</text>
+              </view>
+            </view>
+            <view class="fund-right">
+              <text class="fund-price {{item.changeClass}}">{{item.priceStr}}</text>
+              <text class="fund-change {{item.changeClass}}">{{item.changeStr}}</text>
+            </view>
+          </view>
+
+          <view class="fund-metrics">
+            <view class="metric">
+              <text class="metric-label">溢折率</text>
+              <text class="metric-value metric-premium {{item.premiumClass}}">{{item.premiumStr}}</text>
+            </view>
+            <view class="metric">
+              <text class="metric-label">参考净值</text>
+              <text class="metric-value">{{item.iopvStr}}</text>
+            </view>
+            <view class="metric">
+              <text class="metric-label">成交额</text>
+              <text class="metric-value">{{item.amountStr}}</text>
+            </view>
+          </view>
+
+          <view class="fund-foot">
+            <text class="foot-text">跟踪误差 {{item.trackingErrStr}}</text>
+            <text class="foot-text">费率 {{item.feeStr}}</text>
+            <text class="foot-link">详情 ›</text>
+          </view>
+        </view>
+
+        <view class="update-row">
+          <text class="update-text">最后更新 {{lastUpdate}} · 数据仅供参考</text>
+        </view>
+
+        <view class="disclaimer">
+          <text class="disclaimer-text">数据来源：腾讯财经行情、QDII Lens。数据仅供参考，不构成投资建议。基金有风险，投资需谨慎。</text>
+        </view>
+      </view>
+
+      <view class="bottom-safe"></view>
+    </view>
+  </scroll-view>
+</view>
