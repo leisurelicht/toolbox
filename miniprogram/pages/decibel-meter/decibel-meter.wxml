@@ -1,0 +1,116 @@
+<!-- 分贝仪 -->
+<view class="page-container">
+  <view class="nav-wrap">
+    <navigation-bar title="分贝仪" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+  </view>
+
+  <!-- 固定区：实时读数 + 开始/停止 -->
+  <view class="top-area">
+    <view class="meter-card">
+      <view class="meter-head">
+        <view class="status-pill {{measuring ? 'active' : ''}}">
+          <view class="status-dot"></view>
+          <text>{{statusText}}</text>
+        </view>
+        <text class="calib-tag">校准 +{{calibration}} dB</text>
+      </view>
+
+      <view class="db-row">
+        <text class="db-approx">≈</text>
+        <text class="db-value">{{dbText}}</text>
+        <text class="db-unit">dB</text>
+      </view>
+      <text class="db-sub">{{dbfsText}} dBFS · {{levelHint}}</text>
+
+      <view class="level-track">
+        <view class="level-fill {{levelClass}}" style="width: {{levelPercent}}%;"></view>
+        <view wx:if="{{peakPercent > 0}}" class="level-peak" style="left: {{peakPercent}}%;"></view>
+      </view>
+      <view class="level-labels">
+        <text>安静</text>
+        <text>日常</text>
+        <text>嘈杂</text>
+        <text>很吵</text>
+      </view>
+
+      <view class="meter-stats">
+        <view class="meter-stat">
+          <text class="stat-label">峰值</text>
+          <text class="stat-value">{{peakText}}</text>
+        </view>
+        <view class="meter-stat">
+          <text class="stat-label">平均</text>
+          <text class="stat-value">{{avgText}}</text>
+        </view>
+        <view class="meter-stat">
+          <text class="stat-label">时长</text>
+          <text class="stat-value">{{elapsedText}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="measure-btn {{measuring ? 'stop' : ''}}" bind:tap="onToggleMeasure">
+      <text class="measure-icon">{{measuring ? '■' : '●'}}</text>
+      <text class="measure-text">{{measuring ? '停止测量' : '开始测量'}}</text>
+    </view>
+  </view>
+
+  <scroll-view
+    class="scroll-body"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    style="height: {{scrollHeight}}px;"
+  >
+    <view class="scroll-inner">
+      <view class="calib-card">
+        <view class="panel-title">校准</view>
+        <view class="calib-row">
+          <text class="calib-label">校准值</text>
+          <view class="step-btn" bind:tap="onCalibrationMinus"><text>−</text></view>
+          <input
+            class="calib-input"
+            type="number"
+            value="{{calibrationText}}"
+            bind:input="onCalibrationInput"
+            bind:blur="onCalibrationBlur"
+          />
+          <view class="step-btn" bind:tap="onCalibrationPlus"><text>+</text></view>
+          <text class="calib-unit">dB</text>
+        </view>
+        <text class="calib-note">读数 = 手机相对电平 + 校准值。不同手机麦克风不同，默认 90 dB；可对着已知声源校准。</text>
+        <view class="reset-link" bind:tap="onResetStats"><text>重置峰值与平均</text></view>
+      </view>
+
+      <view class="ref-card">
+        <view class="panel-title">参考声级</view>
+        <view class="ref-row">
+          <text class="ref-level">30 dB</text>
+          <text class="ref-desc">安静卧室 / 耳语</text>
+        </view>
+        <view class="ref-row">
+          <text class="ref-level">50 dB</text>
+          <text class="ref-desc">正常交谈</text>
+        </view>
+        <view class="ref-row">
+          <text class="ref-level">70 dB</text>
+          <text class="ref-desc">吸尘器 / 繁忙街道</text>
+        </view>
+        <view class="ref-row">
+          <text class="ref-level">90 dB</text>
+          <text class="ref-desc">地铁 / 摩托车</text>
+        </view>
+        <view class="ref-row">
+          <text class="ref-level">110 dB</text>
+          <text class="ref-desc">演唱会 / 警报</text>
+        </view>
+      </view>
+
+      <view class="tip-card">
+        <text>手机麦克风不是专业声级计，未经过计量校准；读数仅用于相对比较和环境参考，不能用于噪声取证、健康或安全判断。单次测量最长 10 分钟，测量时请勿遮挡麦克风。</text>
+      </view>
+
+      <view class="bottom-spacer"></view>
+    </view>
+  </scroll-view>
+</view>

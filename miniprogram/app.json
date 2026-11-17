@@ -8,6 +8,7 @@
     "pages/bill-calc/bill-calc",
     "pages/unit-convert/unit-convert",
     "pages/packing-list/packing-list",
+    "pages/decibel-meter/decibel-meter",
     "pages/key-signature/key-signature",
     "pages/note-names/note-names",
     "pages/pitch-frequency/pitch-frequency",
