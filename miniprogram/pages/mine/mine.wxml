@@ -1,41 +1,123 @@
 <!-- 我的页面 -->
-<navigation-bar title="我的" back="{{false}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
-
-<scroll-view class="page" scroll-y enhanced show-scrollbar="{{false}}">
-  <!-- 头像 -->
-  <view class="profile">
-    <view class="profile-avatar">
-      <text class="avatar-text">我</text>
-    </view>
-    <text class="profile-name">工具箱用户</text>
-    <text class="profile-sub">简单 · 高效 · 实用</text>
+<view class="page-container">
+  <view class="top-bar">
+    <navigation-bar title="我的" back="{{false}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
   </view>
 
-  <!-- 菜单 -->
-  <view class="section">
-    <view class="section-label">通用</view>
-    <view class="menu-card">
-      <view class="menu-item" bind:tap="onTapAbout">
-        <view class="menu-icon" style="background: #EEF2FF;">
-          <text style="color: #4C6EF5;">?</text>
+  <scroll-view
+    class="scroll-body"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    style="height: {{scrollHeight}}px;"
+  >
+    <view class="scroll-inner">
+      <!-- 用户卡片 -->
+      <view class="profile-card">
+        <view class="profile-row">
+          <view class="profile-avatar">
+            <text class="avatar-text">我</text>
+          </view>
+          <view class="profile-meta">
+            <text class="profile-sub">简单 · 高效 · 实用</text>
+          </view>
         </view>
-        <text class="menu-text">关于工具箱</text>
-        <text class="menu-arrow">›</text>
-      </view>
-      <view class="menu-divider"></view>
-      <view class="menu-item" bind:tap="onTapFeedback">
-        <view class="menu-icon" style="background: #FFF0E6;">
-          <text style="color: #F76707;">✧</text>
+
+        <view class="feature-row">
+          <view class="feature-chip">
+            <text>无需登录</text>
+          </view>
+          <view class="feature-chip">
+            <text>无广告</text>
+          </view>
+          <view class="feature-chip">
+            <text>持续更新</text>
+          </view>
         </view>
-        <text class="menu-text">意见反馈</text>
-        <text class="menu-arrow">›</text>
       </view>
+
+      <!-- 常用工具 -->
+      <view class="section">
+        <view class="section-head">
+          <text class="section-title">常用工具</text>
+          <view class="section-link" bind:tap="onGoHome">
+            <text class="section-link-text">全部工具</text>
+            <text class="section-link-arrow">›</text>
+          </view>
+        </view>
+
+        <view class="quick-grid">
+          <view
+            wx:for="{{quickTools}}"
+            wx:key="id"
+            class="quick-item"
+            data-path="{{item.path}}"
+            bind:tap="onQuickTap"
+          >
+            <view class="quick-icon" style="background: {{item.iconBg}};">
+              <text class="quick-icon-text" style="color: {{item.iconColor}};">{{item.symbol}}</text>
+            </view>
+            <view class="quick-info">
+              <text class="quick-name">{{item.name}}</text>
+              <text class="quick-desc">{{item.desc}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 使用小贴士 -->
+      <view class="section">
+        <view class="section-head">
+          <text class="section-title">使用小贴士</text>
+        </view>
+
+        <view class="tip-card">
+          <view wx:for="{{tips}}" wx:key="no" class="tip-row">
+            <text class="tip-index">{{item.no}}</text>
+            <text class="tip-text">{{item.text}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 通用 -->
+      <view class="section">
+        <view class="section-head">
+          <text class="section-title">通用</text>
+        </view>
+
+        <view class="menu-card">
+          <view class="menu-item" bind:tap="onTapAbout">
+            <view class="menu-icon" style="background: #EEF2FF;">
+              <text style="color: #4C6EF5;">?</text>
+            </view>
+            <text class="menu-text">关于工具箱</text>
+            <text class="menu-arrow">›</text>
+          </view>
+
+          <view class="menu-divider"></view>
+
+          <view class="menu-item" bind:tap="onTapFeedback">
+            <view class="menu-icon" style="background: #FFF0E6;">
+              <text style="color: #F76707;">✧</text>
+            </view>
+            <text class="menu-text">意见反馈</text>
+            <text class="menu-arrow">›</text>
+          </view>
+
+          <view class="menu-divider"></view>
+
+          <view class="menu-item" bind:tap="onClearCache">
+            <view class="menu-icon" style="background: #F0FDF4;">
+              <text style="color: #15803D;">清</text>
+            </view>
+            <text class="menu-text">清除缓存</text>
+            <text class="menu-arrow">›</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 底部留白：避开自定义 TabBar -->
+      <view class="bottom-spacer"></view>
     </view>
-  </view>
-
-  <view class="version">
-    <text>工具箱 v1.0.0</text>
-  </view>
-
-  <view class="bottom-spacer"></view>
-</scroll-view>
+  </scroll-view>
+</view>
