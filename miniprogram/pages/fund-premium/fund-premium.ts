@@ -13,6 +13,7 @@ import {
   Quote,
   SP500_ETFS,
   US50_ETFS,
+  DOW_ETFS,
   SubStatus,
   TrendPoint,
   calcPremium,
@@ -36,9 +37,9 @@ import {
 
 const REFRESH_INTERVAL = 5000
 const TE_CACHE_KEY = 'fund_te_cache_v1'
-const TRACKED_ETFS: EtfMeta[] = NASDAQ_100_ETFS.concat(SP500_ETFS)
+const TRACKED_ETFS: EtfMeta[] = NASDAQ_100_ETFS.concat(SP500_ETFS, DOW_ETFS)
 
-type TabKey = 'nasdaq' | 'sp500' | 'us50'
+type TabKey = 'nasdaq' | 'sp500' | 'us50' | 'dow'
 
 interface TrendBar {
   i: number
@@ -62,6 +63,7 @@ let latestQuotes: Quote[] = []
 let nasdaqCards: FundCard[] = []
 let sp500Cards: FundCard[] = []
 let us50Cards: FundCard[] = []
+let dowCards: FundCard[] = []
 let premiumOrder: Record<string, string[]> = {}
 let refreshTimer: number | null = null
 let lastFetchAt = 0
@@ -201,7 +203,7 @@ function buildCards(
 
 /** 只更新某一项指标，避免整列表重新 setData */
 function patchCard(inst: any, code: string, patch: Partial<FundCard>) {
-  const groups = [nasdaqCards, sp500Cards, us50Cards]
+  const groups = [nasdaqCards, sp500Cards, us50Cards, dowCards]
   for (const list of groups) {
     const index = list.findIndex(item => item.code === code)
     if (index >= 0) {
@@ -211,7 +213,9 @@ function patchCard(inst: any, code: string, patch: Partial<FundCard>) {
 
   const active = inst.data.activeTab === 'nasdaq'
     ? nasdaqCards
-    : (inst.data.activeTab === 'us50' ? us50Cards : sp500Cards)
+    : (inst.data.activeTab === 'sp500'
+      ? sp500Cards
+      : (inst.data.activeTab === 'us50' ? us50Cards : dowCards))
   const activeIndex = active.findIndex(item => item.code === code)
   if (activeIndex >= 0) {
     inst.setData({ [`list[${activeIndex}]`]: active[activeIndex] })
@@ -327,6 +331,7 @@ Component({
         nasdaqCards = buildCards('nasdaq', NASDAQ_100_ETFS, latestQuotes, subCache, teCache, feeCache)
         sp500Cards = buildCards('sp500', SP500_ETFS, latestQuotes, subCache, teCache, feeCache)
         us50Cards = buildCards('us50', US50_ETFS, latestQuotes, subCache, teCache, feeCache)
+        dowCards = buildCards('dow', DOW_ETFS, latestQuotes, subCache, teCache, feeCache)
         lastFetchAt = Date.now()
 
         this.setData({
@@ -365,6 +370,7 @@ Component({
     cardsForTab(tab: TabKey): FundCard[] {
       if (tab === 'sp500') return sp500Cards
       if (tab === 'us50') return us50Cards
+      if (tab === 'dow') return dowCards
       return nasdaqCards
     },
 
@@ -372,12 +378,13 @@ Component({
     async loadSubStatus() {
       subLoaded = true
       try {
-        const [nasdaqRes, sp500Res, us50Res] = await Promise.all([
+        const [nasdaqRes, sp500Res, us50Res, dowRes] = await Promise.all([
           fetchRankings(BENCHMARK.nasdaq),
           fetchRankings(BENCHMARK.sp500),
           fetchRankings(BENCHMARK.us50),
+          fetchRankings(BENCHMARK.dow),
         ])
-        for (const item of nasdaqRes.items.concat(sp500Res.items, us50Res.items)) {
+        for (const item of nasdaqRes.items.concat(sp500Res.items, us50Res.items, dowRes.items)) {
           const sub = pickSubStatus(item.rules)
           if (!sub) continue
           subCache[item.code] = sub
@@ -409,6 +416,7 @@ Component({
       teLoaded = true
       this.loadGroupTrackingError(NASDAQ_100_ETFS)
       this.loadGroupTrackingError(SP500_ETFS)
+      this.loadGroupTrackingError(DOW_ETFS)
     },
 
     async loadGroupTrackingError(pool: EtfMeta[]) {
@@ -449,6 +457,7 @@ Component({
       this.fetchTrendFor('nasdaq')
       this.fetchTrendFor('sp500')
       this.fetchTrendFor('us50')
+      this.fetchTrendFor('dow')
     },
 
     fetchTrendFor(tab: TabKey) {
@@ -459,7 +468,9 @@ Component({
       trendLoading[tab] = true
       const slug = tab === 'sp500'
         ? BENCHMARK.sp500
-        : (tab === 'us50' ? BENCHMARK.us50 : BENCHMARK.nasdaq)
+        : (tab === 'us50'
+          ? BENCHMARK.us50
+          : (tab === 'dow' ? BENCHMARK.dow : BENCHMARK.nasdaq))
       fetchPremiumTrend(slug, 90)
         .then(res => {
           trendCache[tab] = res.points
@@ -478,7 +489,9 @@ Component({
       const points = trendCache[tab] || []
       const label = tab === 'sp500'
         ? '标普500'
-        : (tab === 'us50' ? '美国50' : '纳指100')
+        : (tab === 'us50'
+          ? '美国50'
+          : (tab === 'dow' ? '道琼斯' : '纳指100'))
 
       if (points.length === 0) {
         this.setData({ trend: emptyTrend(label) })
@@ -521,7 +534,7 @@ Component({
     /* ========== 交互 ========== */
     switchTab(e: WechatMiniprogram.TouchEvent) {
       const tab = e.currentTarget.dataset.tab as string
-      if (tab !== 'nasdaq' && tab !== 'sp500' && tab !== 'us50') return
+      if (tab !== 'nasdaq' && tab !== 'sp500' && tab !== 'us50' && tab !== 'dow') return
       if (tab === this.data.activeTab) return
       this.setData({
         activeTab: tab,

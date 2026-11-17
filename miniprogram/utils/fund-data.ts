@@ -4,7 +4,7 @@
    ======================================== */
 
 export type Market = 'sh' | 'sz'
-export type IndexSlug = 'nasdaq-100' | 'sp-500' | 'us-50'
+export type IndexSlug = 'nasdaq-100' | 'sp-500' | 'us-50' | 'dow-jones'
 
 export interface EtfMeta {
   code: string
@@ -123,12 +123,17 @@ export const US50_ETFS: EtfMeta[] = [
   { code: '159577', market: 'sz', index: 'us-50', name: '美国50ETF', company: '汇添富', fullName: '汇添富MSCI美国50ETF' },
 ]
 
-export const ALL_ETFS: EtfMeta[] = NASDAQ_100_ETFS.concat(SP500_ETFS, US50_ETFS)
+export const DOW_ETFS: EtfMeta[] = [
+  { code: '513400', market: 'sh', index: 'dow-jones', name: '道琼斯ETF', company: '鹏华', fullName: '鹏华道琼斯ETF' },
+]
+
+export const ALL_ETFS: EtfMeta[] = NASDAQ_100_ETFS.concat(SP500_ETFS, US50_ETFS, DOW_ETFS)
 
 export const BENCHMARK = {
   nasdaq: 'nasdaq-100' as IndexSlug,
   sp500: 'sp-500' as IndexSlug,
   us50: 'us-50' as IndexSlug,
+  dow: 'dow-jones' as IndexSlug,
 }
 
 const ETF_MAP: Record<string, EtfMeta> = {}

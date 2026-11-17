@@ -29,6 +29,14 @@
         <text class="tab-text">美国50</text>
         <view wx:if="{{activeTab === 'us50'}}" class="tab-dot"></view>
       </view>
+      <view
+        class="tab-item {{activeTab === 'dow' ? 'active' : ''}}"
+        data-tab="dow"
+        bind:tap="switchTab"
+      >
+        <text class="tab-text">道琼斯</text>
+        <view wx:if="{{activeTab === 'dow'}}" class="tab-dot"></view>
+      </view>
     </view>
 
     <view class="trend-card">
