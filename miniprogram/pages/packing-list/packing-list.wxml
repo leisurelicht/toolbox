@@ -1,0 +1,119 @@
+<!-- 旅行打包 -->
+<view class="page-container">
+  <view class="nav-wrap">
+    <navigation-bar title="旅行打包" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+  </view>
+
+  <view class="top-bar">
+    <view class="progress-head">
+      <view class="progress-left">
+        <text class="progress-title">已打包</text>
+        <text class="progress-count">{{packedCount}} / {{totalCount}}</text>
+      </view>
+      <text class="progress-percent">{{progress}}%</text>
+    </view>
+    <view class="progress-track">
+      <view class="progress-fill" style="width: {{progress}}%;"></view>
+    </view>
+  </view>
+
+  <scroll-view
+    class="scroll-body"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    style="height: {{scrollHeight}}px;"
+  >
+    <view class="scroll-inner">
+      <view class="settings-card">
+        <view class="panel-title">行程设置</view>
+        <text class="summary">当前清单：{{summaryText}}</text>
+
+        <view class="chip-row">
+          <view
+            wx:for="{{types}}"
+            wx:key="id"
+            class="chip {{formType === item.id ? 'active' : ''}}"
+            data-id="{{item.id}}"
+            bind:tap="onTypeChange"
+          >
+            <text>{{item.name}}</text>
+          </view>
+        </view>
+
+        <view class="chip-row weather-row">
+          <view
+            wx:for="{{weathers}}"
+            wx:key="id"
+            class="chip {{formWeather === item.id ? 'active' : ''}}"
+            data-id="{{item.id}}"
+            bind:tap="onWeatherChange"
+          >
+            <text>{{item.name}}</text>
+          </view>
+        </view>
+
+        <view class="days-row">
+          <text class="days-label">天数</text>
+          <input
+            class="days-input"
+            type="number"
+            value="{{formDaysText}}"
+            bind:input="onDaysInput"
+            bind:blur="onDaysBlur"
+          />
+          <text class="days-suffix">天</text>
+          <view class="generate-btn" bind:tap="onGenerate"><text>生成清单</text></view>
+        </view>
+
+        <text wx:if="{{settingsDirty}}" class="dirty-hint">设置已修改，点击生成清单生效</text>
+        <view class="copy-list" bind:tap="onCopyList"><text>复制清单</text></view>
+      </view>
+
+      <view class="custom-card">
+        <input
+          class="custom-input"
+          placeholder="添加自己的物品"
+          placeholder-style="color: #B0B5C0"
+          value="{{customText}}"
+          maxlength="20"
+          bind:input="onCustomInput"
+        />
+        <view class="custom-btn" bind:tap="onAddCustom"><text>添加</text></view>
+      </view>
+
+      <view wx:for="{{groups}}" wx:key="id" class="group-card">
+        <view class="group-head">
+          <text class="group-name">{{item.name}}</text>
+          <text class="group-count">{{item.packed}} / {{item.total}}</text>
+        </view>
+        <view class="item-list">
+          <view
+            wx:for="{{item.items}}"
+            wx:for-item="row"
+            wx:key="id"
+            class="item-row"
+            data-id="{{row.id}}"
+            bind:tap="onToggleItem"
+          >
+            <view class="check {{row.checked ? 'checked' : ''}}">
+              <text wx:if="{{row.checked}}">✓</text>
+            </view>
+            <text class="item-name {{row.checked ? 'checked' : ''}}">{{row.name}}</text>
+            <text wx:if="{{row.qty}}" class="item-qty">{{row.qty}}</text>
+            <view
+              wx:if="{{row.custom}}"
+              class="item-del"
+              data-id="{{row.id}}"
+              catch:tap="onDeleteCustom"
+            >
+              <text>×</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="bottom-spacer"></view>
+    </view>
+  </scroll-view>
+</view>

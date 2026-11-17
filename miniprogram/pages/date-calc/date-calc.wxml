@@ -1,0 +1,309 @@
+<!-- 日期计算 -->
+<view class="page-container">
+  <view class="nav-wrap">
+    <navigation-bar title="日期计算" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+  </view>
+
+  <!-- 固定 Tab -->
+  <view class="top-bar">
+    <view class="mode-tabs">
+      <view
+        wx:for="{{modes}}"
+        wx:key="id"
+        class="mode-tab {{activeMode === item.id ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bind:tap="onModeChange"
+      >
+        <text>{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view
+    class="scroll-body"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    scroll-into-view="{{scrollIntoView}}"
+    style="height: {{scrollHeight}}px;"
+  >
+    <view class="scroll-inner">
+      <view id="top-diff" class="scroll-anchor"></view>
+      <view id="top-add" class="scroll-anchor"></view>
+      <view id="top-countdown" class="scroll-anchor"></view>
+      <view id="top-shelf" class="scroll-anchor"></view>
+
+      <view class="today-line">
+        <text>今天 {{todayText}}</text>
+      </view>
+
+      <!-- 日期差 -->
+      <block wx:if="{{activeMode === 'diff'}}">
+        <view class="panel-card">
+          <view class="panel-title">选择日期</view>
+
+          <picker class="date-picker" mode="date" start="1900-01-01" end="2100-12-31" value="{{startDate}}" bindchange="onStartDateChange">
+            <view class="date-field">
+              <text class="date-label">开始</text>
+              <view class="date-main">
+                <text class="date-value">{{startDate}}</text>
+                <text class="date-weekday">{{startWeekday}}</text>
+              </view>
+              <text class="chevron">›</text>
+            </view>
+          </picker>
+
+          <view class="date-divider">
+            <view class="divider-line"></view>
+            <view class="swap-btn" bind:tap="onSwapDates"><text>⇄ 交换</text></view>
+            <view class="divider-line"></view>
+          </view>
+
+          <picker class="date-picker" mode="date" start="1900-01-01" end="2100-12-31" value="{{endDate}}" bindchange="onEndDateChange">
+            <view class="date-field">
+              <text class="date-label">结束</text>
+              <view class="date-main">
+                <text class="date-value">{{endDate}}</text>
+                <text class="date-weekday">{{endWeekday}}</text>
+              </view>
+              <text class="chevron">›</text>
+            </view>
+          </picker>
+
+          <view class="switch-row">
+            <view class="switch-text">
+              <text class="switch-title">包含结束日</text>
+              <text class="switch-desc">把结束当天也算进总天数</text>
+            </view>
+            <view class="toggle {{diffIncludeEnd ? 'on' : ''}}" bind:tap="onToggleIncludeEnd">
+              <view class="toggle-knob"></view>
+            </view>
+          </view>
+        </view>
+
+        <view class="result-card">
+          <text class="result-kicker">相差</text>
+          <view class="result-number-row">
+            <text class="result-number">{{diffTotal}}</text>
+            <text class="result-unit">天</text>
+          </view>
+          <text wx:if="{{diffHint}}" class="result-hint">{{diffHint}}</text>
+
+          <view class="breakdown">
+            <view class="breakdown-item">
+              <text class="breakdown-label">按周</text>
+              <text class="breakdown-value">{{diffWeeksText}}</text>
+            </view>
+            <view class="breakdown-item">
+              <text class="breakdown-label">年月日</text>
+              <text class="breakdown-value">{{diffCalendarText}}</text>
+            </view>
+            <view class="breakdown-item">
+              <text class="breakdown-label">区间</text>
+              <text class="breakdown-value">{{diffWorkText}}</text>
+            </view>
+          </view>
+
+          <view class="copy-link" data-text="{{diffCopyText}}" bind:tap="onCopy">
+            <text>复制结果</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- 日期推算 -->
+      <block wx:elif="{{activeMode === 'add'}}">
+        <view class="panel-card">
+          <view class="panel-title">基准日期</view>
+          <picker class="date-picker" mode="date" start="1900-01-01" end="2100-12-31" value="{{baseDate}}" bindchange="onBaseDateChange">
+            <view class="date-field">
+              <text class="date-label">日期</text>
+              <view class="date-main">
+                <text class="date-value">{{baseDate}}</text>
+                <text class="date-weekday">{{baseWeekday}}</text>
+              </view>
+              <text class="chevron">›</text>
+            </view>
+          </picker>
+
+          <view class="panel-title spaced">往后还是往前</view>
+          <view class="direction-row">
+            <view
+              class="direction-chip {{addDirection === 'after' ? 'active' : ''}}"
+              data-id="after"
+              bind:tap="onDirectionChange"
+            >
+              <text>之后</text>
+            </view>
+            <view
+              class="direction-chip {{addDirection === 'before' ? 'active' : ''}}"
+              data-id="before"
+              bind:tap="onDirectionChange"
+            >
+              <text>之前</text>
+            </view>
+          </view>
+
+          <view class="panel-title spaced">数量</view>
+          <input
+            class="number-input"
+            type="number"
+            maxlength="6"
+            value="{{addAmountText}}"
+            bind:input="onAddAmountInput"
+            bind:blur="onAddAmountBlur"
+          />
+
+          <view class="panel-title spaced">单位</view>
+          <view class="unit-row">
+            <view
+              wx:for="{{addUnits}}"
+              wx:key="id"
+              class="unit-chip {{addUnit === item.id ? 'active' : ''}}"
+              data-id="{{item.id}}"
+              bind:tap="onAddUnitChange"
+            >
+              <text>{{item.name}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="result-card">
+          <text class="result-kicker">推算结果</text>
+          <text class="result-date">{{addResultDate}}</text>
+          <text class="result-weekday">{{addResultWeekday}} · {{addResultMeta}}</text>
+          <text wx:if="{{addResultHint}}" class="result-note">{{addResultHint}}</text>
+          <view class="copy-link" data-text="{{addCopyText}}" bind:tap="onCopy">
+            <text>复制结果</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- 倒数日 -->
+      <block wx:elif="{{activeMode === 'countdown'}}">
+        <view class="panel-card">
+          <view class="panel-title">新增倒数日</view>
+          <input
+            class="title-input"
+            placeholder="比如：妈妈生日、考试、旅行"
+            placeholder-style="color: #B0B5C0"
+            value="{{eventTitle}}"
+            maxlength="20"
+            bind:input="onEventTitleInput"
+          />
+          <picker class="date-picker" mode="date" start="1900-01-01" end="2100-12-31" value="{{eventDate}}" bindchange="onEventDateChange">
+            <view class="date-field compact">
+              <text class="date-label">日期</text>
+              <view class="date-main">
+                <text class="date-value">{{eventDate}}</text>
+                <text class="date-weekday">{{eventDateWeekday}}</text>
+              </view>
+              <text class="chevron">›</text>
+            </view>
+          </picker>
+
+          <view class="switch-row">
+            <view class="switch-text">
+              <text class="switch-title">每年重复</text>
+              <text class="switch-desc">生日、纪念日自动倒数下一年</text>
+            </view>
+            <view class="toggle {{eventRepeat ? 'on' : ''}}" bind:tap="onToggleEventRepeat">
+              <view class="toggle-knob"></view>
+            </view>
+          </view>
+
+          <view class="primary-btn" bind:tap="onAddEvent"><text>添加倒数日</text></view>
+          <text class="panel-note">只保存在本机，不会推送提醒</text>
+        </view>
+
+        <view wx:if="{{events.length === 0}}" class="empty-card">
+          <view class="empty-mark"><text>日</text></view>
+          <text class="empty-title">还没有倒数日</text>
+          <text class="empty-desc">添加一个重要的日子，打开就能看到还剩几天</text>
+        </view>
+
+        <view wx:else class="event-list">
+          <view wx:for="{{events}}" wx:key="id" class="event-card {{item.status}}">
+            <view class="event-date">
+              <text class="event-md">{{item.mdText}}</text>
+              <text class="event-year">{{item.yearText}} · {{item.weekday}}</text>
+            </view>
+            <view class="event-main">
+              <text class="event-title">{{item.title}}</text>
+              <text class="event-days {{item.status}}">{{item.daysText}}</text>
+            </view>
+            <view class="event-del" data-id="{{item.id}}" bind:tap="onDeleteEvent">
+              <text>×</text>
+            </view>
+          </view>
+        </view>
+      </block>
+
+      <!-- 保质期 -->
+      <block wx:else>
+        <view class="panel-card">
+          <view class="panel-title">生产日期</view>
+          <picker class="date-picker" mode="date" start="1900-01-01" end="2100-12-31" value="{{shelfDate}}" bindchange="onShelfDateChange">
+            <view class="date-field">
+              <text class="date-label">日期</text>
+              <view class="date-main">
+                <text class="date-value">{{shelfDate}}</text>
+                <text class="date-weekday">{{shelfWeekday}}</text>
+              </view>
+              <text class="chevron">›</text>
+            </view>
+          </picker>
+
+          <view class="panel-title spaced">保质期</view>
+          <input
+            class="number-input"
+            type="number"
+            maxlength="6"
+            value="{{shelfAmountText}}"
+            bind:input="onShelfAmountInput"
+            bind:blur="onShelfAmountBlur"
+          />
+          <view class="unit-row">
+            <view
+              wx:for="{{shelfUnits}}"
+              wx:key="id"
+              class="unit-chip {{shelfUnit === item.id ? 'active' : ''}}"
+              data-id="{{item.id}}"
+              bind:tap="onShelfUnitChange"
+            >
+              <text>{{item.name}}</text>
+            </view>
+          </view>
+
+          <view class="preset-row">
+            <view
+              wx:for="{{shelfPresets}}"
+              wx:key="label"
+              class="preset-chip"
+              data-amount="{{item.amount}}"
+              data-unit="{{item.unit}}"
+              bind:tap="onShelfPreset"
+            >
+              <text>{{item.label}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="shelf-card {{shelfStatus}}">
+          <text class="shelf-kicker">到期日</text>
+          <text class="shelf-date">{{shelfExpiryText}}</text>
+          <text class="shelf-weekday">{{shelfExpiryWeekday}}</text>
+          <view class="shelf-status {{shelfStatus}}"><text>{{shelfStatusText}}</text></view>
+          <view class="progress-track">
+            <view class="progress-fill {{shelfStatus}}" style="width: {{shelfProgress}}%;"></view>
+          </view>
+          <text class="shelf-note">按生产日期 + 保质期估算，具体以包装标注为准</text>
+          <view class="copy-link shelf-copy" data-text="{{shelfCopyText}}" bind:tap="onCopy">
+            <text>复制结果</text>
+          </view>
+        </view>
+      </block>
+
+      <view class="bottom-spacer"></view>
+    </view>
+  </scroll-view>
+</view>

@@ -1,0 +1,95 @@
+<!-- 单位换算 -->
+<view class="page-container">
+  <view class="nav-wrap">
+    <navigation-bar title="单位换算" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+  </view>
+
+  <view class="top-bar">
+    <view class="category-row">
+      <view
+        wx:for="{{categories}}"
+        wx:key="id"
+        class="category-chip {{activeCategory === item.id ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bind:tap="onCategoryChange"
+      >
+        <text>{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view
+    class="scroll-body"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    style="height: {{scrollHeight}}px;"
+  >
+    <view class="scroll-inner">
+      <view class="convert-card">
+        <view class="section-label">从</view>
+        <view class="convert-row">
+          <input
+            class="amount-input"
+            type="{{inputType}}"
+            value="{{amountText}}"
+            bind:input="onAmountInput"
+            bind:blur="onAmountBlur"
+          />
+          <view wx:if="{{supportsNegative}}" class="sign-btn" bind:tap="onToggleSign">
+            <text>±</text>
+          </view>
+          <picker
+            class="unit-picker"
+            mode="selector"
+            range="{{unitNames}}"
+            value="{{fromUnitIndex}}"
+            bindchange="onFromUnitChange"
+          >
+            <view class="unit-field">
+              <text>{{fromLabel}}</text>
+              <text class="chevron">›</text>
+            </view>
+          </picker>
+        </view>
+
+        <view class="swap-row">
+          <view class="swap-btn" bind:tap="onSwap"><text>⇅ 交换</text></view>
+        </view>
+
+        <view class="section-label">到</view>
+        <view class="convert-row">
+          <view class="result-box">
+            <text class="result-value {{resultClass}}">{{resultText}}</text>
+          </view>
+          <picker
+            class="unit-picker"
+            mode="selector"
+            range="{{unitNames}}"
+            value="{{toUnitIndex}}"
+            bindchange="onToUnitChange"
+          >
+            <view class="unit-field">
+              <text>{{toLabel}}</text>
+              <text class="chevron">›</text>
+            </view>
+          </picker>
+        </view>
+
+        <view class="one-line">
+          <text>1 {{fromLabel}} = {{oneText}} {{toLabel}}</text>
+        </view>
+
+        <view class="copy-link" data-text="{{copyText}}" bind:tap="onCopy">
+          <text>复制结果</text>
+        </view>
+      </view>
+
+      <view class="note-card">
+        <text>{{note}}</text>
+      </view>
+
+      <view class="bottom-spacer"></view>
+    </view>
+  </scroll-view>
+</view>

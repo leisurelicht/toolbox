@@ -1,0 +1,369 @@
+<!-- 算账 -->
+<view class="page-container">
+  <view class="nav-wrap">
+    <navigation-bar title="算账" back="{{true}}" color="#2D2D3A" background="#FBFBFD"></navigation-bar>
+  </view>
+
+  <view class="top-bar">
+    <view class="mode-tabs">
+      <view
+        wx:for="{{tabs}}"
+        wx:key="id"
+        class="mode-tab {{activeTab === item.id ? 'active' : ''}}"
+        data-id="{{item.id}}"
+        bind:tap="onTabChange"
+      >
+        <text>{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <scroll-view
+    class="scroll-body"
+    scroll-y
+    enhanced
+    show-scrollbar="{{false}}"
+    scroll-into-view="{{scrollIntoView}}"
+    style="height: {{scrollHeight}}px;"
+  >
+    <view class="scroll-inner">
+      <view id="bill-top-aa" class="scroll-anchor"></view>
+      <view id="bill-top-discount" class="scroll-anchor"></view>
+      <view id="bill-top-unitprice" class="scroll-anchor"></view>
+      <view id="bill-top-installment" class="scroll-anchor"></view>
+
+      <!-- AA 分账 -->
+      <block wx:if="{{activeTab === 'aa'}}">
+        <view class="panel-card">
+          <view class="panel-title">分账信息</view>
+          <view class="form-rows">
+            <view class="input-row">
+              <text class="input-label">总金额</text>
+              <view class="input-wrap">
+                <text class="input-prefix">¥</text>
+                <input
+                  class="input"
+                  type="digit"
+                  value="{{aaTotalText}}"
+                  data-field="aaTotalText"
+                  bind:input="onFieldInput"
+                  bind:blur="onFieldBlur"
+                />
+              </view>
+            </view>
+            <view class="input-row">
+              <text class="input-label">人数</text>
+              <view class="input-wrap">
+                <input
+                  class="input"
+                  type="number"
+                  value="{{aaPeopleText}}"
+                  data-field="aaPeopleText"
+                  bind:input="onFieldInput"
+                  bind:blur="onFieldBlur"
+                />
+                <text class="input-suffix">人</text>
+              </view>
+            </view>
+            <view class="input-row">
+              <text class="input-label">其他费用</text>
+              <view class="input-wrap">
+                <text class="input-prefix">¥</text>
+                <input
+                  class="input"
+                  type="digit"
+                  value="{{aaExtraText}}"
+                  data-field="aaExtraText"
+                  bind:input="onFieldInput"
+                  bind:blur="onFieldBlur"
+                />
+              </view>
+            </view>
+          </view>
+          <text class="panel-note">其他费用可填服务费、打包费、小费</text>
+        </view>
+
+        <view class="result-card">
+          <text class="result-kicker">每人约</text>
+          <view class="result-number-row">
+            <text class="result-currency">¥</text>
+            <text class="result-number {{aaPerClass}}">{{aaPerText}}</text>
+          </view>
+          <text class="result-hint">{{aaHint}}</text>
+          <view class="mini-stats">
+            <view class="mini-stat">
+              <text class="mini-label">总金额</text>
+              <text class="mini-value">¥{{aaGrandText}}</text>
+            </view>
+            <view class="mini-stat">
+              <text class="mini-label">余数</text>
+              <text class="mini-value">¥{{aaRemainderText}}</text>
+            </view>
+          </view>
+          <view class="copy-link" data-text="{{aaCopyText}}" bind:tap="onCopy">
+            <text>复制结果</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- 满减 / 折扣 -->
+      <block wx:elif="{{activeTab === 'discount'}}">
+        <view class="panel-card">
+          <view class="panel-title">优惠信息</view>
+          <view class="form-rows">
+            <view class="input-row">
+              <text class="input-label">原价</text>
+              <view class="input-wrap">
+                <text class="input-prefix">¥</text>
+                <input
+                  class="input"
+                  type="digit"
+                  value="{{discountPriceText}}"
+                  data-field="discountPriceText"
+                  bind:input="onFieldInput"
+                  bind:blur="onFieldBlur"
+                />
+              </view>
+            </view>
+            <view class="input-row">
+              <text class="input-label">满减门槛</text>
+              <view class="input-wrap">
+                <text class="input-prefix">¥</text>
+                <input
+                  class="input"
+                  type="digit"
+                  value="{{discountThresholdText}}"
+                  data-field="discountThresholdText"
+                  bind:input="onFieldInput"
+                  bind:blur="onFieldBlur"
+                />
+              </view>
+            </view>
+            <view class="input-row">
+              <text class="input-label">减免金额</text>
+              <view class="input-wrap">
+                <text class="input-prefix">¥</text>
+                <input
+                  class="input"
+                  type="digit"
+                  value="{{discountReduceText}}"
+                  data-field="discountReduceText"
+                  bind:input="onFieldInput"
+                  bind:blur="onFieldBlur"
+                />
+              </view>
+            </view>
+            <view class="input-row">
+              <text class="input-label">折扣</text>
+              <view class="input-wrap">
+                <input
+                  class="input"
+                  type="digit"
+                  value="{{discountRateText}}"
+                  data-field="discountRateText"
+                  bind:input="onFieldInput"
+                  bind:blur="onFieldBlur"
+                />
+                <text class="input-suffix">折</text>
+              </view>
+            </view>
+          </view>
+          <text wx:if="{{discountHint}}" class="panel-note warn">{{discountHint}}</text>
+        </view>
+
+        <view class="result-card">
+          <text class="result-kicker">对比结果</text>
+          <text class="result-winner">{{discountWinner}}</text>
+          <view class="compare-row">
+            <view class="compare-box">
+              <text class="compare-label">满减实付</text>
+              <text class="compare-value">¥{{discountFullText}}</text>
+            </view>
+            <view class="compare-box">
+              <text class="compare-label">折扣实付</text>
+              <text class="compare-value">¥{{discountRatePayText}}</text>
+            </view>
+          </view>
+          <view class="save-row">
+            <text class="save-label">相差</text>
+            <text class="save-value">¥{{discountSaveText}}</text>
+            <text class="save-extra">满减约 {{discountEffectiveText}}</text>
+          </view>
+          <view class="copy-link" data-text="{{discountCopyText}}" bind:tap="onCopy">
+            <text>复制结果</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- 单价比较 -->
+      <block wx:elif="{{activeTab === 'unitprice'}}">
+        <view class="panel-card">
+          <view class="panel-title">比较单位</view>
+          <view class="unit-row">
+            <view
+              wx:for="{{upUnits}}"
+              wx:key="id"
+              class="unit-chip {{upUnit === item.id ? 'active' : ''}}"
+              data-id="{{item.id}}"
+              bind:tap="onUpUnitChange"
+            >
+              <text>{{item.name}}</text>
+            </view>
+          </view>
+
+          <view class="product-block spaced">
+            <text class="product-name">商品 A</text>
+            <view class="product-inputs">
+              <view class="input-wrap">
+                <text class="input-prefix">¥</text>
+                <input
+                  class="input"
+                  type="digit"
+                  value="{{upPriceAText}}"
+                  data-field="upPriceAText"
+                  bind:input="onFieldInput"
+                  bind:blur="onFieldBlur"
+                />
+              </view>
+              <view class="input-wrap">
+                <input
+                  class="input"
+                  type="digit"
+                  value="{{upQtyAText}}"
+                  data-field="upQtyAText"
+                  bind:input="onFieldInput"
+                  bind:blur="onFieldBlur"
+                />
+                <text class="input-suffix">{{upUnit === 'count' ? '件' : upUnit === 'g' ? '克' : '毫升'}}</text>
+              </view>
+            </view>
+          </view>
+
+          <view class="product-block">
+            <text class="product-name">商品 B</text>
+            <view class="product-inputs">
+              <view class="input-wrap">
+                <text class="input-prefix">¥</text>
+                <input
+                  class="input"
+                  type="digit"
+                  value="{{upPriceBText}}"
+                  data-field="upPriceBText"
+                  bind:input="onFieldInput"
+                  bind:blur="onFieldBlur"
+                />
+              </view>
+              <view class="input-wrap">
+                <input
+                  class="input"
+                  type="digit"
+                  value="{{upQtyBText}}"
+                  data-field="upQtyBText"
+                  bind:input="onFieldInput"
+                  bind:blur="onFieldBlur"
+                />
+                <text class="input-suffix">{{upUnit === 'count' ? '件' : upUnit === 'g' ? '克' : '毫升'}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view class="result-card">
+          <text class="result-kicker">每 {{upLabel}}</text>
+          <view class="compare-row">
+            <view class="compare-box">
+              <text class="compare-label">商品 A</text>
+              <text class="compare-value">¥{{upPerAText}}</text>
+            </view>
+            <view class="compare-box">
+              <text class="compare-label">商品 B</text>
+              <text class="compare-value">¥{{upPerBText}}</text>
+            </view>
+          </view>
+          <text class="result-winner">{{upWinner}}</text>
+          <text wx:if="{{upSaveText}}" class="result-hint">{{upSaveText}}</text>
+          <view class="copy-link" data-text="{{upCopyText}}" bind:tap="onCopy">
+            <text>复制结果</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- 分期年化 -->
+      <block wx:else>
+        <view class="panel-card">
+          <view class="panel-title">分期信息</view>
+          <view class="form-rows">
+            <view class="input-row">
+              <text class="input-label">本金</text>
+              <view class="input-wrap">
+                <text class="input-prefix">¥</text>
+                <input
+                  class="input"
+                  type="digit"
+                  value="{{instPrincipalText}}"
+                  data-field="instPrincipalText"
+                  bind:input="onFieldInput"
+                  bind:blur="onFieldBlur"
+                />
+              </view>
+            </view>
+            <view class="input-row">
+              <text class="input-label">期数</text>
+              <view class="input-wrap">
+                <input
+                  class="input"
+                  type="number"
+                  value="{{instPeriodsText}}"
+                  data-field="instPeriodsText"
+                  bind:input="onFieldInput"
+                  bind:blur="onFieldBlur"
+                />
+                <text class="input-suffix">期</text>
+              </view>
+            </view>
+            <view class="input-row">
+              <text class="input-label">每期费率</text>
+              <view class="input-wrap">
+                <input
+                  class="input"
+                  type="digit"
+                  value="{{instFeeText}}"
+                  data-field="instFeeText"
+                  bind:input="onFieldInput"
+                  bind:blur="onFieldBlur"
+                />
+                <text class="input-suffix">%</text>
+              </view>
+            </view>
+          </view>
+          <text class="panel-note">例：每期 0.6% 手续费，表面总费率 7.2%，实际年化会高很多</text>
+        </view>
+
+        <view class="result-card">
+          <text class="result-kicker">实际年化</text>
+          <text class="result-apr">{{instAprText}}</text>
+          <text class="result-hint">{{instHint}}</text>
+          <view class="mini-stats">
+            <view class="mini-stat">
+              <text class="mini-label">每月还款</text>
+              <text class="mini-value">¥{{instMonthlyText}}</text>
+            </view>
+            <view class="mini-stat">
+              <text class="mini-label">总手续费</text>
+              <text class="mini-value">¥{{instTotalFeeText}}</text>
+            </view>
+            <view class="mini-stat">
+              <text class="mini-label">表面总费率</text>
+              <text class="mini-value">{{instSurfaceText}}</text>
+            </view>
+          </view>
+          <view class="copy-link" data-text="{{instCopyText}}" bind:tap="onCopy">
+            <text>复制结果</text>
+          </view>
+        </view>
+      </block>
+
+      <view class="bottom-spacer"></view>
+    </view>
+  </scroll-view>
+</view>
