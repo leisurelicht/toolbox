@@ -15,15 +15,28 @@ const BAR_OPTIONS: BarOption[] = [
   { label: '6/8', beats: 6 },
 ]
 
+interface DivisionOption {
+  value: number
+  label: string
+}
+
+const DIVISIONS: DivisionOption[] = [
+  { value: 1, label: '不细分' },
+  { value: 2, label: '八分' },
+  { value: 3, label: '三连音' },
+  { value: 4, label: '十六分' },
+]
+
 /* ===== 模块级状态（页面单实例，避免 this 类型推断问题） ===== */
 let timer: any = null
 let nextAt = 0
-let beatCursor = 0
+let tickCursor = 0
 let running = false
 let instance: any = null
 let webAudio: any = null
 let normCtx: any = null
 let accCtx: any = null
+let softCtx: any = null
 let tapTimes: number[] = []
 
 function clampBpm(v: number): number {
@@ -48,10 +61,14 @@ function initAudio() {
     accCtx = wx.createInnerAudioContext()
     accCtx.src = '/assets/click-accent.wav'
     accCtx.obeyMuteSwitch = false
+    softCtx = wx.createInnerAudioContext()
+    softCtx.src = '/assets/click-soft.wav'
+    softCtx.obeyMuteSwitch = false
     return
   } catch (e) {
     normCtx = null
     accCtx = null
+    softCtx = null
   }
   try {
     const w = wx as any
@@ -66,8 +83,10 @@ function initAudio() {
   }
 }
 
-function playClick(accent: boolean) {
-  const ctx = accent ? accCtx : normCtx
+function playClick(kind: string) {
+  let ctx = normCtx
+  if (kind === 'accent') ctx = accCtx
+  if (kind === 'soft') ctx = softCtx
   if (ctx) {
     try {
       ctx.stop()
@@ -83,36 +102,59 @@ function playClick(accent: boolean) {
     const osc = webAudio.createOscillator()
     const gain = webAudio.createGain()
     osc.type = 'square'
-    osc.frequency.value = accent ? 1500 : 950
-    gain.gain.setValueAtTime(accent ? 0.32 : 0.2, t)
-    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06)
+    let freq = 950
+    let peak = 0.2
+    if (kind === 'accent') {
+      freq = 1500
+      peak = 0.32
+    } else if (kind === 'soft') {
+      freq = 720
+      peak = 0.11
+    }
+    osc.frequency.value = freq
+    gain.gain.setValueAtTime(peak, t)
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05)
     osc.connect(gain)
     gain.connect(webAudio.destination)
     osc.start(t)
-    osc.stop(t + 0.08)
+    osc.stop(t + 0.07)
   } catch (e) {
     /* 忽略播放异常 */
   }
 }
 
-function fireBeat() {
+function fireTick() {
   if (!instance) return
   const beats = instance.data.beats
-  instance.setData({
-    beatIndex: beatCursor,
-    beatText: beatCursor + 1 + ' / ' + beats,
-  })
-  playClick(beatCursor === 0)
-  beatCursor = (beatCursor + 1) % beats
+  const division = instance.data.division
+  const beatIndex = Math.floor(tickCursor / division) % beats
+  const isMain = tickCursor % division === 0
+
+  if (isMain) {
+    instance.setData({
+      beatIndex,
+      beatText: beatIndex + 1 + ' / ' + beats,
+    })
+    playClick(beatIndex === 0 ? 'accent' : 'normal')
+  } else {
+    playClick('soft')
+  }
+  tickCursor += 1
+}
+
+function tickInterval(): number {
+  if (!instance) return 500
+  const division = instance.data.division || 1
+  return 60000 / instance.data.bpm / division
 }
 
 function schedule() {
   if (!running || !instance) return
-  const interval = 60000 / instance.data.bpm
+  const interval = tickInterval()
   const delay = Math.max(0, nextAt - Date.now())
   timer = setTimeout(() => {
     if (!running) return
-    fireBeat()
+    fireTick()
     nextAt += interval
     /* 若因主线程阻塞落后超过一拍，重新对齐，避免连击 */
     if (Date.now() - nextAt > interval) {
@@ -125,11 +167,11 @@ function schedule() {
 function startMetronome() {
   if (!instance || running) return
   running = true
-  beatCursor = 0
+  tickCursor = 0
   nextAt = Date.now()
   instance.setData({ running: true })
-  fireBeat()
-  nextAt = Date.now() + 60000 / instance.data.bpm
+  fireTick()
+  nextAt = Date.now() + tickInterval()
   schedule()
 }
 
@@ -153,7 +195,7 @@ function setBpm(bpm: number) {
       clearTimeout(timer)
       timer = null
     }
-    nextAt = Date.now() + 60000 / safe
+    nextAt = Date.now() + 60000 / safe / (instance.data.division || 1)
     schedule()
   }
 }
@@ -206,8 +248,10 @@ Component({
     scrollHeight: 0,
     bpm: 120,
     beats: 4,
+    division: 1,
     presets: PRESETS,
     barOptions: BAR_OPTIONS,
+    divisions: DIVISIONS,
     dots: buildDots(4),
     beatIndex: -1,
     beatText: '—',
@@ -253,8 +297,16 @@ Component({
     onBeats(e: WechatMiniprogram.TouchEvent) {
       const beats = Number(e.currentTarget.dataset.beats)
       stopMetronome()
-      beatCursor = 0
+      tickCursor = 0
       this.setData({ beats, dots: buildDots(beats), beatIndex: -1, beatText: '—' })
+    },
+
+    onDivision(e: WechatMiniprogram.TouchEvent) {
+      const division = Number(e.currentTarget.dataset.value)
+      if (division === this.data.division) return
+      stopMetronome()
+      tickCursor = 0
+      this.setData({ division, beatIndex: -1, beatText: '—' })
     },
 
     onTap() {

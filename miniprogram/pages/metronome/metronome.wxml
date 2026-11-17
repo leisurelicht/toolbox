@@ -69,6 +69,22 @@
         </view>
       </view>
 
+      <!-- 细分拍 -->
+      <view class="bar-card">
+        <text class="bar-label">细分拍（弱拍轻击）</text>
+        <view class="bar-options">
+          <view
+            wx:for="{{divisions}}"
+            wx:key="value"
+            class="bar-chip {{division === item.value ? 'active' : ''}}"
+            data-value="{{item.value}}"
+            bind:tap="onDivision"
+          >
+            <text class="bar-chip-text">{{item.label}}</text>
+          </view>
+        </view>
+      </view>
+
       <!-- 控制 -->
       <view class="action-row">
         <view class="start-btn {{running ? 'running' : ''}}" bind:tap="onStartStop">
@@ -80,7 +96,7 @@
       </view>
 
       <view class="note-tip">
-        <text>每小节第一拍为高音重拍；「Tap 定速」连续点击 2 次以上即可测出速度</text>
+        <text>每小节第一拍为高音重拍；细分拍时弱拍用更轻更低的音色；「Tap 定速」连续点击 2 次以上即可测出速度</text>
       </view>
 
       <view class="bottom-safe"></view>
